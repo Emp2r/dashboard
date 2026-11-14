@@ -220,6 +220,59 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 .trk{position:relative;height:.4rem;border-radius:.2rem;background:rgba(255,255,255,.13);margin:0 .9rem}
 .trk i{position:absolute;top:0;bottom:0;border-radius:.2rem}
 .trk u{position:absolute;top:50%;width:.65rem;height:.65rem;margin:-.33rem 0 0 -.33rem;border-radius:50%;background:#fff;box-shadow:0 0 0 2px rgba(0,0,0,.55);text-decoration:none}
+
+/* Pages (glisser à droite / à gauche) */
+#pages{position:relative;z-index:1;display:flex;width:100vw;height:100vh;overflow-x:auto;overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;scrollbar-width:none}
+#pages::-webkit-scrollbar{display:none}
+#app,#p2{flex:0 0 100vw;width:100vw;scroll-snap-align:start;scroll-snap-stop:always}
+.car{overscroll-behavior-x:contain}
+#pg{position:fixed;left:0;right:0;bottom:.15rem;z-index:6;display:flex;justify-content:center}
+.pgd{display:block;width:1.2rem;height:.9rem;padding:.25rem .4rem;background:rgba(255,255,255,.25);background-clip:content-box;border-radius:50%}
+.pgd.on{background-color:rgba(255,255,255,.85)}
+
+/* Page 2 : consommation */
+#p2{height:100vh;padding:1.1rem;display:grid;gap:1rem;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1.25fr 1fr;box-sizing:border-box}
+#e-chart{grid-column:1 / -1}
+.ehead{display:flex;justify-content:space-between;align-items:flex-start;flex:none;margin-top:.6rem}
+.ebig{font-size:3.4rem;font-weight:200;letter-spacing:-.03em;line-height:1;font-feature-settings:"tnum" 1}
+.ebig small,.tbig small{font-size:1.15rem;font-weight:400;color:var(--t2);margin-left:.5rem;letter-spacing:0}
+.esub{font-size:.95rem;color:var(--t2);margin-top:.3rem}
+.rng{display:inline-flex;padding:.2rem;border-radius:2rem;background:rgba(255,255,255,.08)}
+.rng button{padding:.35rem .9rem;border-radius:2rem;font-size:.85rem;font-weight:500;color:var(--t2)}
+.rng button.on{background:rgba(255,255,255,.22);color:#fff;font-weight:600}
+.chart{flex:1;min-height:0;position:relative}
+.plot{position:absolute;left:2.8rem;right:.2rem;top:1.4rem;bottom:1.9rem}
+.gl{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,.08)}
+.gl span{position:absolute;left:-2.8rem;top:-.5rem;width:2.3rem;text-align:right;font-size:.7rem;color:var(--t3)}
+.avg{position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,.4);z-index:2}
+.avg span{position:absolute;right:calc(100% + .4rem);top:-.5rem;font-size:.66rem;color:var(--t2);white-space:nowrap}
+.bars{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;align-items:flex-end}
+.b{flex:1;height:100%;position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.b i{display:block;width:62%;max-width:2.4rem;min-height:2px;border-radius:.55rem .55rem .2rem .2rem;background:linear-gradient(#5ac8fa,#0a84ff)}
+.b.last i{background:linear-gradient(#ffcc66,#ff9f0a)}
+.b em{font-style:normal;font-size:.68rem;color:var(--t2);margin-bottom:.15rem;font-feature-settings:"tnum" 1;white-space:nowrap}
+.b u{position:absolute;bottom:-1.65rem;left:0;right:0;text-align:center;font-size:.7rem;color:var(--t3);text-decoration:none;line-height:1.15}
+.b.we u{color:rgba(255,159,10,.75)}
+.tbig{font-size:4.6rem;font-weight:200;letter-spacing:-.04em;line-height:1;margin-top:.8rem;font-feature-settings:"tnum" 1}
+.tsub{font-size:1.2rem;color:var(--t2);margin-top:.3rem;font-weight:500}
+.tfoot{margin-top:auto;display:flex;align-items:center}
+.tfoot.col{display:block}
+.tnote{font-size:.85rem;color:var(--t2);line-height:1.35}
+.tnote b{color:var(--t1);font-weight:500}
+.tfoot .tnote{margin-left:.7rem}
+.tfoot.col .tnote{margin-left:0}
+.delta{display:inline-block;flex:none;padding:.28rem .75rem;border-radius:2rem;font-size:.9rem;font-weight:600}
+.delta.down{background:rgba(48,209,88,.18);color:var(--green)}
+.delta.up{background:rgba(255,159,10,.18);color:var(--orange)}
+.pbar{height:.5rem;border-radius:.3rem;background:rgba(255,255,255,.12);overflow:hidden}
+.pbar u{display:block;height:100%;border-radius:.3rem;background:linear-gradient(90deg,#5ac8fa,#0a84ff);text-decoration:none}
+.pbar u.g{background:rgba(255,255,255,.4)}
+.tfoot.col .pbar{margin-bottom:.6rem}
+.wrow{display:flex;align-items:center;margin-bottom:.45rem;font-size:.85rem;color:var(--t2)}
+.wrow span{flex:none;width:8.5rem}
+.wrow .pbar{flex:1;margin:0 .7rem}
+.wrow b{flex:none;width:2.6rem;text-align:right;color:var(--t1);font-weight:500}
 </style>
 </head>
 <body>
@@ -233,6 +286,7 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
   <mask id="mMoon" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><rect width="64" height="64" fill="#fff"/><circle cx="42" cy="24" r="15" fill="#000"/></mask>
 </defs></svg>
 
+<div id="pages">
 <div id="app">
   <section class="card" id="c-clock"></section>
   <section class="card" id="c-w0"><canvas class="fx"></canvas><div class="in" id="w0"></div></section>
@@ -241,6 +295,14 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
   <section class="card" id="c-agenda"></section>
   <section class="card" id="c-edt"></section>
 </div>
+<div id="p2">
+  <section class="card" id="e-chart"></section>
+  <section class="card" id="e-yday"></section>
+  <section class="card" id="e-month"></section>
+  <section class="card" id="e-week"></section>
+</div>
+</div>
+<div id="pg"><i class="pgd on"></i><i class="pgd"></i></div>
 
 <div id="wx"><div class="bg"></div><canvas class="fx"></canvas><div id="wx-in"></div><button id="wx-back" type="button"><span>‹</span>Retour</button></div>
 
@@ -394,6 +456,8 @@ function wkInit(){
     var idle=Date.now()-lastTouch, car=document.getElementById('car');
     if((wk.open||wx.open)&&idle>90000){closeWeek();closeWx();}
     else if(!wk.open&&!wx.open&&idle>120000&&car&&car.scrollLeft>5) car.scrollTo({left:0,behavior:'smooth'});
+    var pgs=document.getElementById('pages');
+    if(!wk.open&&!wx.open&&idle>180000&&pgs&&pgs.scrollLeft>5) pgs.scrollTo({left:0,behavior:'smooth'});
   },5000);
 }
 
@@ -473,7 +537,7 @@ function loadConf(){
     if(!c||!c.people) throw new Error('bad conf');
     CONFIG.places=c.places;CONFIG.train=c.train;if(c.calendars)CONFIG.calendars=c.calendars;PEOPLE=c.people;
     state.conf=true;state.weather=[null,null];state.weatherOk=[false,false];cache={};
-    edtInit();render();loadWeather(0);loadWeather(1);loadAgenda();
+    edtInit();render();loadWeather(0);loadWeather(1);loadAgenda();loadEdf();
   }).catch(function(){});
 }
 var state={weather:[null,null],weatherOk:[false,false],cal:null,calDemo:false,edt:null,calOk:null};
@@ -763,6 +827,97 @@ function wxInit(){
 }
 
 /* =====================================================================
+   PAGE 2 — CONSOMMATION ÉLECTRIQUE (compteur Linky / EDF)
+   Les données (kWh par jour, jusqu'à hier) viennent du relais : ?data=conso
+   ===================================================================== */
+var edf={data:null,demo:true,ok:null,range:14};
+function fr(n,d){return Number(n).toFixed(d).replace('.',',');}
+function pd2(s){var a=s.split('-');return new Date(+a[0],+a[1]-1,+a[2]);}
+function sumK(a){var t=0;a.forEach(function(x){t+=x.k;});return t;}
+function demoEdf(){
+  var days=[],n=new Date(),i;
+  for(i=62;i>=1;i--){
+    var d=new Date(n.getFullYear(),n.getMonth(),n.getDate()-i), we=d.getDay()===0||d.getDay()===6;
+    var r=Math.abs(Math.sin(i*12.9898)*43758.5453)%1;
+    days.push({d:ymd(d),k:Math.round((10.5+(we?3.5:0)+r*5+Math.sin(i/9)*1.5)*100)/100});
+  }
+  return {days:days,prix:0.2};
+}
+function loadEdf(){
+  if(!CONFIG.proxy||!CONFIG.key){if(!edf.data){edf.data=demoEdf();edf.demo=true;}render();return;}
+  fetchT(api('data=conso'),20000).then(function(r){return r.json();}).then(function(j){
+    if(!j||!j.days||!j.days.length) throw new Error('no data');
+    edf.data=j;edf.demo=false;edf.ok=true;
+  }).catch(function(){
+    edf.ok=false;if(!edf.data){edf.data=demoEdf();edf.demo=true;}
+  }).then(render);
+}
+function renderEdf(){
+  var e=edf.data; if(!e) return;
+  var days=e.days, L=days.length, last=days[L-1], prix=e.prix||0, ld=pd2(last.d);
+  var tag=edf.demo?'<span class="pill">démo</span>':(edf.ok===false?'<span class="pill">hors ligne</span>':'Enedis · Linky');
+
+  /* ---- graphique ---- */
+  var n=Math.min(edf.range,L), sl=days.slice(-n), mx=0, sum=sumK(sl);
+  sl.forEach(function(x){mx=Math.max(mx,x.k);});
+  var step=mx>40?10:5, top=Math.max(step,Math.ceil(mx/step)*step), avg=sum/n, bars='';
+  sl.forEach(function(x,ix){
+    var d=pd2(x.d), we=d.getDay()===0||d.getDay()===6, isLast=ix===n-1;
+    var lab=(n<=14||(n-1-ix)%5===0)?'LMMJVSD'.charAt((d.getDay()+6)%7)+'<br>'+d.getDate():'';
+    var val=(n<=14||isLast)?'<em>'+fr(x.k,1)+'</em>':'';
+    bars+='<div class="b'+(we?' we':'')+(isLast?' last':'')+'">'+val+'<i style="height:'+(x.k/top*100)+'%"></i><u>'+lab+'</u></div>';
+  });
+  var gl=[0,top/2,top].map(function(v){return '<div class="gl" style="bottom:'+(v/top*100)+'%"><span>'+fr(v,v%1?1:0)+'</span></div>';}).join('');
+  var rng=[7,14,30].map(function(v){return '<button data-r="'+v+'" class="'+(edf.range===v?'on':'')+'">'+v+' j</button>';}).join('');
+  put('e-chart','<div class="label"><span>Consommation électrique</span><span class="r">'+tag+'</span></div>'+
+    '<div class="ehead"><div><div class="ebig">'+fr(sum,0)+'<small>kWh sur '+n+' jours</small></div>'+
+    '<div class="esub">≈ '+fr(sum*prix,2)+' € d’énergie · moyenne '+fr(avg,1)+' kWh par jour</div></div><div class="rng">'+rng+'</div></div>'+
+    '<div class="chart"><div class="plot">'+gl+'<div class="bars">'+bars+'</div><div class="avg" style="bottom:'+(avg/top*100)+'%"><span>moy. '+fr(avg,1)+'</span></div></div></div>');
+
+  /* ---- hier ---- */
+  var prev7=days.slice(-8,-1), a7=prev7.length?sumK(prev7)/prev7.length:last.k, dl=(last.k/a7-1)*100;
+  put('e-yday','<div class="label"><span>Hier</span><span class="r">'+cap(JOURS[ld.getDay()])+' '+ld.getDate()+' '+MOIS[ld.getMonth()]+'</span></div>'+
+    '<div class="tbig">'+fr(last.k,1)+'<small>kWh</small></div><div class="tsub">≈ '+fr(last.k*prix,2)+' €</div>'+
+    '<div class="tfoot"><span class="delta '+(dl<=0?'down':'up')+'">'+(dl<=0?'−':'+')+fr(Math.abs(dl),0)+' %</span><span class="tnote">par rapport à la moyenne des 7 jours précédents ('+fr(a7,1)+' kWh)</span></div>');
+
+  /* ---- mois ---- */
+  var ym=last.d.slice(0,7), pm=new Date(ld.getFullYear(),ld.getMonth()-1,1), pk=ymd(pm).slice(0,7), ms=0, pms=0, pc=0;
+  days.forEach(function(x){var k=x.d.slice(0,7);if(k===ym)ms+=x.k;else if(k===pk){pms+=x.k;pc++;}});
+  var dim=new Date(ld.getFullYear(),ld.getMonth()+1,0).getDate(), proj=ms/ld.getDate()*dim;
+  var pmFull=pc===new Date(pm.getFullYear(),pm.getMonth()+1,0).getDate();
+  var mfoot=pmFull?
+    '<div class="pbar"><u style="width:'+Math.min(100,ms/pms*100)+'%"></u></div><div class="tnote">Mois dernier : <b>'+fr(pms,0)+' kWh</b> · projection ce mois : <b>'+fr(proj,0)+' kWh</b> (≈ '+fr(proj*prix,0)+' €)</div>':
+    '<div class="tnote">Projection fin de mois : <b>'+fr(proj,0)+' kWh</b> (≈ '+fr(proj*prix,0)+' €)</div>';
+  put('e-month','<div class="label"><span>'+cap(MOIS[ld.getMonth()])+'</span><span class="r">au '+ld.getDate()+'</span></div>'+
+    '<div class="tbig">'+fr(ms,0)+'<small>kWh</small></div><div class="tsub">≈ '+fr(ms*prix,2)+' € à ce jour</div><div class="tfoot col">'+mfoot+'</div>');
+
+  /* ---- semaine ---- */
+  var cnt=((ld.getDay()+6)%7)+1, cur=days.slice(-cnt), prv=days.slice(-cnt-7,-7), cs=sumK(cur), ps=sumK(prv), wd=ps?(cs/ps-1)*100:0, wm=Math.max(cs,ps,1);
+  put('e-week','<div class="label"><span>Cette semaine</span><span class="r">'+cnt+(cnt>1?' jours':' jour')+'</span></div>'+
+    '<div class="tbig">'+fr(cs,0)+'<small>kWh</small></div><div class="tsub">≈ '+fr(cs*prix,2)+' €</div>'+
+    '<div class="tfoot col"><div class="wrow"><span>Cette semaine</span><div class="pbar"><u style="width:'+(cs/wm*100)+'%"></u></div><b>'+fr(cs,0)+'</b></div>'+
+    (prv.length===cnt?'<div class="wrow"><span>Semaine précédente</span><div class="pbar"><u class="g" style="width:'+(ps/wm*100)+'%"></u></div><b>'+fr(ps,0)+'</b></div>'+
+    '<div class="tnote"><span class="delta '+(wd<=0?'down':'up')+'">'+(wd<=0?'−':'+')+fr(Math.abs(wd),0)+' %</span> sur les mêmes jours</div>':'')+'</div>');
+}
+
+/* ---- navigation entre les pages (glisser horizontalement) ---- */
+function pagesInit(){
+  var pgs=document.getElementById('pages'), dots=document.querySelectorAll('#pg .pgd'), ticking=false;
+  pgs.addEventListener('scroll',function(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false; var i=Math.round(pgs.scrollLeft/Math.max(1,pgs.clientWidth));
+      for(var k=0;k<dots.length;k++) dots[k].className='pgd'+(k===i?' on':'');
+    });
+  });
+  for(var k=0;k<dots.length;k++)(function(k){dots[k].addEventListener('click',function(){pgs.scrollTo({left:k*pgs.clientWidth,behavior:'smooth'});});})(k);
+  document.getElementById('e-chart').addEventListener('click',function(e){
+    var t=e.target; while(t&&t.getAttribute&&!t.getAttribute('data-r')) t=t.parentNode;
+    if(t&&t.getAttribute&&t.getAttribute('data-r')){edf.range=+t.getAttribute('data-r');renderEdf();}
+  });
+}
+
+/* =====================================================================
    ANIMATION MÉTÉO (canvas, très léger : 24 images/s)
    ===================================================================== */
 var FX=[];
@@ -889,13 +1044,16 @@ function render(){
   renderEdtSlides();
   if(wk.open) renderWeek();
   if(wx.open) renderWx();
+  renderEdf();
   var h=new Date().getHours(), f=CONFIG.nightFrom, t=CONFIG.nightTo;
   var night=f>t?(h>=f||h<t):(h>=f&&h<t);
   document.body.className=night?'night':'';
 }
-edtInit();wkInit();wxInit();render();
+edtInit();wkInit();wxInit();pagesInit();render();
 fxSetup(0);fxSetup(1);fxSetup(2);requestAnimationFrame(fxLoop);
 loadConf();
+loadEdf();
+setInterval(loadEdf,60*60000);
 setInterval(function(){if(!state.conf)loadConf();},60000);
 loadWeather(0);loadWeather(1);loadAgenda();
 setInterval(render,15000);
