@@ -297,6 +297,51 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
   background:rgba(255,255,255,.14);border:1px solid var(--line);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
 #mn-back span{font-size:1.6rem;line-height:0;margin-right:.35rem;position:relative;top:.1rem}
 
+/* Courses */
+#c-shop{cursor:pointer}
+.srow{display:flex;align-items:center;gap:.6rem;font-size:.98rem;margin-top:.42rem;white-space:nowrap;overflow:hidden}
+.srow i{font-style:normal;font-size:1.25rem;line-height:1}
+.srow span{overflow:hidden;text-overflow:ellipsis}
+.srow b{margin-left:auto;font-weight:500;color:var(--t2)}
+#sh{position:fixed;left:0;top:0;right:0;bottom:0;z-index:100;display:none;background:#000}
+#sh.on{display:block}
+#sh .bg{position:absolute}
+#sh-in{position:relative;z-index:1;height:100%;padding:1rem 1.2rem 4.6rem;box-sizing:border-box;display:grid;gap:1rem;grid-template-columns:1.55fr 1fr}
+#sh-in .card{min-height:0}
+.sgrid{flex:1;min-height:0;overflow-y:auto;margin-top:.7rem;display:grid;gap:.6rem;align-content:start;-webkit-overflow-scrolling:touch}
+.sgrid.cats{grid-template-columns:repeat(4,1fr)}
+.sgrid.arts{grid-template-columns:repeat(5,1fr)}
+.ct,.at{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;border-radius:1.2rem;background:rgba(255,255,255,.08);color:var(--t1);padding:.7rem .3rem;text-align:center}
+.ct{height:8.6rem}.ct i,.at i{font-style:normal;line-height:1}
+.ct i{font-size:2.6rem}.ct span{font-size:1rem;font-weight:600}.ct small{font-size:.78rem;color:var(--t2)}
+.at{height:7.6rem}.at i{font-size:2.5rem}.at span{font-size:.92rem;font-weight:600;line-height:1.15}
+.at.on{background:rgba(10,132,255,.35);box-shadow:inset 0 0 0 2px #0a84ff}
+.at u{position:absolute;top:.4rem;right:.45rem;min-width:1.4rem;height:1.4rem;border-radius:.8rem;background:#0a84ff;color:#fff;font-size:.8rem;font-weight:700;line-height:1.4rem;text-align:center;text-decoration:none;padding:0 .35rem}
+.at:active,.ct:active{background:rgba(255,255,255,.22)}
+.sback{display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .9rem .35rem .6rem;border-radius:2rem;background:rgba(255,255,255,.12);font-size:.95rem;font-weight:600;color:var(--t1)}
+.shead{display:flex;align-items:center;justify-content:space-between;margin-top:.5rem}
+.shead b{font-size:1.4rem;font-weight:600}
+.lst{flex:1;min-height:0;overflow-y:auto;margin-top:.5rem;-webkit-overflow-scrolling:touch}
+.li{display:grid;grid-template-columns:2.2rem 1fr auto auto;align-items:center;gap:.5rem;padding:.4rem 0;border-top:1px solid var(--line);font-size:1.05rem}
+.li i{font-style:normal;font-size:1.5rem;text-align:center}
+.li .nm{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.li.d .nm{text-decoration:line-through;color:var(--t3)}.li.d i{opacity:.4}
+.qt{display:flex;align-items:center;gap:.3rem}
+.qt button{width:2rem;height:2rem;border-radius:50%;background:rgba(255,255,255,.1);color:var(--t1);font-size:1.15rem;line-height:1}
+.qt span{min-width:1.2rem;text-align:center;font-weight:600;font-feature-settings:"tnum" 1}
+.ck{width:2.1rem;height:2.1rem;border-radius:50%;border:2px solid rgba(255,255,255,.3);color:#fff;font-size:1.1rem;line-height:1.7rem;text-align:center}
+.li.d .ck{background:#30d158;border-color:#30d158}
+.sact{display:flex;gap:.5rem;margin-top:.6rem}
+.sact button{flex:1;padding:.65rem .5rem;border-radius:1.2rem;background:rgba(255,255,255,.1);color:var(--t1);font-size:.92rem;font-weight:600}
+.sact button.b{background:#0a84ff;color:#fff}
+.sact button.r{background:rgba(255,69,58,.8)}
+.sadd{display:flex;gap:.5rem;margin-top:.6rem}
+.sadd input{flex:1;min-width:0;padding:.6rem .9rem;border-radius:1.2rem;background:rgba(255,255,255,.1);border:1px solid var(--line);color:var(--t1);font-size:1rem;-webkit-user-select:text;user-select:text}
+.sadd button{padding:.6rem 1.1rem;border-radius:1.2rem;background:#0a84ff;color:#fff;font-weight:600;font-size:.95rem}
+#sh-back{position:absolute;right:1.4rem;bottom:1.2rem;z-index:5;padding:.8rem 1.7rem .8rem 1.2rem;border-radius:2rem;font-size:1.1rem;font-weight:600;
+  background:rgba(255,255,255,.14);border:1px solid var(--line);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+#sh-back span{font-size:1.6rem;line-height:0;margin-right:.35rem;position:relative;top:.1rem}
+
 /* Page 2 : consommation */
 #p2{height:100vh;padding:1.1rem 1.1rem 2.7rem;display:grid;gap:1rem;grid-template-columns:1fr 1.1fr 1fr;grid-template-rows:1fr 1fr;box-sizing:border-box}
 #e-card{cursor:pointer}
@@ -364,11 +409,17 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 <div id="p2">
   <section class="card" id="e-card"></section>
   <section class="card" id="m-card"></section>
+  <section class="card" id="c-shop"></section>
 </div>
 </div>
 <div id="pg"><i class="pgd on"></i><i class="pgd"></i></div>
 
 <div id="wx"><div class="bg"></div><canvas class="fx"></canvas><div id="wx-in"></div><button id="wx-back" type="button"><span>‹</span>Retour</button></div>
+
+<div id="sh"><div class="bg"></div><div id="sh-in">
+  <section class="card" id="sh-main"></section>
+  <section class="card" id="sh-list"></section>
+</div><button id="sh-back" type="button"><span>‹</span>Retour</button></div>
 
 <div id="mn"><div class="bg"></div><div id="mn-in">
   <section class="card" id="mn-add"></section>
@@ -531,10 +582,10 @@ function wkInit(){
   ['touchstart','mousedown','keydown','scroll'].forEach(function(ev){document.addEventListener(ev,function(){lastTouch=Date.now();},true);});
   setInterval(function(){          // retour automatique si personne ne touche l'écran
     var idle=Date.now()-lastTouch, car=document.getElementById('car');
-    if((wk.open||wx.open||edf.open||mn.open)&&idle>90000){closeWeek();closeWx();closeEd();closeMn();}
-    else if(!wk.open&&!wx.open&&!edf.open&&!mn.open&&idle>120000&&car&&car.scrollLeft>5) car.scrollTo({left:0,behavior:'smooth'});
+    if((wk.open||wx.open||edf.open||mn.open||SH.open)&&idle>90000){closeWeek();closeWx();closeEd();closeMn();closeShop();}
+    else if(!wk.open&&!wx.open&&!edf.open&&!mn.open&&!SH.open&&idle>120000&&car&&car.scrollLeft>5) car.scrollTo({left:0,behavior:'smooth'});
     var pgs=document.getElementById('pages');
-    if(!wk.open&&!wx.open&&!edf.open&&!mn.open&&idle>180000&&window.curPage>0&&window.goPage) window.goPage(0);
+    if(!wk.open&&!wx.open&&!edf.open&&!mn.open&&!SH.open&&idle>180000&&window.curPage>0&&window.goPage) window.goPage(0);
   },5000);
 }
 
@@ -1142,6 +1193,142 @@ function mnInit(){
   mnSync(false);
 }
 
+/* =====================================================================
+   COURSES — catalogue par rayon, liste « à acheter » (enregistrée sur la tablette)
+   ===================================================================== */
+var SHOP_CAT=[
+ ['Fruits','🍎',[['Bananes','🍌'],['Pommes','🍎'],['Poires','🍐'],['Pêches','🍑'],['Abricots','🍑'],['Fraises','🍓'],['Melon','🍈'],['Pastèque','🍉'],['Clémentines','🍊'],['Mandarines','🍊'],['Citrons','🍋'],['Mangue','🥭'],['Raisin','🍇'],['Kiwis','🥝']]],
+ ['Légumes & herbes','🥕',[['Tomates','🍅'],['Tomates cerises','🍅'],['Concombre','🥒'],['Carottes','🥕'],['Courgettes','🥒'],['Aubergine','🍆'],['Poivron','🌶️'],['Salade','🥬'],['Oignons','🧅'],['Oignons rouges','🧅'],['Oignons cébette','🧅'],['Ail','🧄'],['Pommes de terre','🥔'],['Champignons','🍄'],['Poireaux','🥬'],['Céleri','🥬'],['Navets','🥔'],['Radis','🥕'],['Artichaut','🌿'],['Avocats','🥑'],['Haricots verts','🌱'],['Maïs','🌽'],['Brocoli','🥦'],['Herbes fraîches','🌿'],['Persil','🌿'],['Ciboulette','🌿'],['Menthe','🌿']]],
+ ['Viandes & poissons','🥩',[['Poulet entier','🍗'],['Filets de poulet','🍗'],['Blanc de dinde','🦃'],['Cordons bleus','🍗'],['Steak haché','🥩'],['Viande hachée','🥩'],['Côte de bœuf','🥩'],['Paleron','🥩'],['Tartare de bœuf','🥩'],['Bœuf effiloché','🥩'],['Viande pot-au-feu','🍲'],['Rôti de porc','🍖'],['Saucisses','🌭'],['Merguez','🌭'],['Boudin','🌭'],['Andouillettes','🌭'],['Saumon','🐟'],['Saumon fumé','🐟'],['Truite fumée','🐟'],['Thon','🐟'],['Sardines','🐟'],['Poisson','🐟'],['Surimi','🦀'],['Makis','🍣'],['Sushis','🍣'],['Foie gras','🦆']]],
+ ['Charcuterie','🥓',[['Jambon blanc','🍖'],['Jambon cru','🍖'],['Jambon de poulet','🍖'],['Rosette','🌭'],['Chorizo','🌭'],['Saucisson','🌭'],['Saucisse sèche','🌭'],['Coppa','🥓'],['Bacon','🥓'],['Lardons','🥓'],['Viande des Grisons','🥩'],['Cervelas','🌭'],['Plateau de charcuterie','🍽️']]],
+ ['Crèmerie & œufs','🧀',[['Lait','🥛'],['Œufs','🥚'],['Œufs de caille','🥚'],['Beurre','🧈'],['Crème liquide','🥛'],['Yaourts nature','🥛'],['Skyr','🥛'],['Petits suisses','🥛'],['Fromage blanc','🥛'],['St Môret','🧀'],['Mozzarella','🧀'],['Burrata','🧀'],['Feta','🧀'],['Chèvre','🧀'],['Comté','🧀'],['Gruyère','🧀'],['Parmesan','🧀'],['Cheddar','🧀'],['Bleu','🧀'],['Fromage râpé','🧀'],['Fromage en tranches','🧀'],['Fromage à raclette','🧀'],['Fromage à burger','🧀'],['Cancoillotte','🧀'],['Plateau de fromages','🧀']]],
+ ['Pain & petit-déj','🥐',[['Pain','🥖'],['Pain de mie','🍞'],['Pain de mie céréales','🍞'],['Pain burger','🍔'],['Pain au lait','🥐'],['Brioche','🥐'],['Briochettes','🥐'],['Pancakes','🥞'],['Blinis','🥞'],['Wraps','🌯'],['Pita','🥙'],['Céréales Trésor','🥣'],['Nutella','🍫'],['Confiture','🍓'],['Miel','🍯'],['Nesquik','🥛'],['Café moulu','☕'],['Café en grains','☕'],['Dosettes Senseo','☕'],['Thé','🍵'],['Infusion','🍵']]],
+ ['Épicerie','🍝',[['Pâtes','🍝'],['Riz','🍚'],['Riz japonais','🍚'],['Semoule','🥣'],['Taboulé','🥗'],['Farine','🌾'],['Sucre','🥄'],['Sucre vanillé','🥄'],['Levure','🥄'],['Maïzena','🥄'],['Panure','🥖'],['Purée','🥔'],['Soupes','🍲'],['Gaspacho','🍅'],['Conserves','🥫'],['Ratatouille','🥫'],['Sauce tomate','🍅'],['Pesto','🌿'],['Olives noires','⚫'],['Achards de légumes','🥫'],['Tomates confites','🍅'],['Huile d’olive','🍶'],['Huile de tournesol','🍶'],['Vinaigre balsamique','🍶'],['Lait de coco','🥥'],['Cœurs de palmier','🥫'],['Pâte à pizza','🍕'],['Pâte feuilletée','🥧'],['Pâte brisée','🥧']]],
+ ['Épices & sauces','🧂',[['Sel','🧂'],['Gros sel','🧂'],['Poivre','🧂'],['Poivre en grains','🧂'],['Origan','🌿'],['Cumin','🧂'],['Paprika','🌶️'],['Curry','🧂'],['Clous de girofle','🧂'],['Bouquet garni','🌿'],['Sésame','🧂'],['Épices à volaille','🧂'],['Épices mexicaines','🌶️'],['Harissa','🌶️'],['Ketchup','🍅'],['Mayonnaise','🥚'],['Moutarde','🟡'],['Sauce barbecue','🍖'],['Sauce soja salée','🍶'],['Sauce soja sucrée','🍶'],['Sauce Maggi','🍶'],['Sauce César','🥗'],['Sauce blanche','🥛'],['Sauce curry mangue','🥭'],['Sauce frites','🍟'],['Sauce apéro','🥣'],['Sauce Hannibal','🥣'],['Oignons frits','🧅']]],
+ ['Surgelés','🧊',[['Pizzas','🍕'],['Sauce pizza','🍅'],['Quiches','🥧'],['Frites','🍟'],['Potatoes','🍟'],['Pommes de terre rissolées','🥔'],['Légumes surgelés','🥦'],['Glaces','🍦'],['Falafels','🧆'],['Buns','🍔'],['Sacs à glaçons','🧊']]],
+ ['Goûter & apéro','🍪',[['Chips','🥔'],['Chips fromage','🥔'],['Cookies','🍪'],['Bonbons','🍬'],['Chocolat dessert','🍫'],['Chocolat Milka','🍫'],['Kinder','🍫'],['Chocolats Lindt','🍫'],['Barres protéinées','🍫'],['Gâteau au chocolat','🍰'],['Quatre-quarts','🍰'],['Savane','🍰'],['Tarte tropézienne','🥧'],['Compotes','🍎'],['Compote de pommes','🍎'],['Pompotes','🍎'],['Desserts','🍮'],['Fruits secs','🥜'],['Amandes','🥜'],['Pistaches','🥜'],['Gressins','🥖'],['Légumes apéro','🥕'],['Houmous','🥣'],['Caviar d’aubergine','🍆'],['Tartinades','🥣']]],
+ ['Boissons','🥤',[['Eau gazeuse','💧'],['Coca','🥤'],['Coca zéro','🥤'],['Ice tea','🥤'],['Oasis','🥤'],['Schweppes','🥤'],['Jus d’orange','🍊'],['Jus de pomme','🍎'],['Jus de tomate','🍅'],['Jus multifruits','🧃'],['Jus d’ananas','🍍'],['Grenadine','🥤'],['Sirop de menthe','🥤'],['Boisson énergétique','⚡'],['Bières','🍺'],['Bière brune','🍺'],['Bière blanche','🍺'],['Vin rouge','🍷'],['Vin blanc','🥂'],['Vin en cubi','🍷'],['Vin sans alcool','🍷'],['Champagne','🍾'],['Prosecco','🥂']]],
+ ['Hygiène & beauté','🧴',[['Shampooing','🧴'],['Masque cheveux','🧴'],['Gel douche','🚿'],['Déodorant','🧴'],['Dentifrice','🦷'],['Fil dentaire','🦷'],['Coton','☁️'],['Coton-tiges','☁️'],['Lingettes démaquillantes','🧻'],['Démaquillant yeux','🧴'],['Crème hydratante visage','🧴'],['Crème BB','🧴'],['Coloration cheveux','🎨'],['Cire cheveux','🧴'],['Lames de rasoir','🪒'],['Savon mains','🧼'],['Gel hydroalcoolique','🧴'],['Mouchoirs','🤧'],['Boules Quiès','🔇'],['Serviettes hygiéniques','🧻'],['Parfum','🌸']]],
+ ['Droguerie & entretien','🧽',[['Papier toilette','🧻'],['Sopalin','🧻'],['Sacs poubelles','🗑️'],['Produit sol','🧹'],['Produit WC','🚽'],['Produit vitres','🪟'],['Produit vaisselle mains','🍽️'],['Dosettes lave-vaisselle','🍽️'],['Lessive','🧺'],['Adoucissant','🧺'],['Pods lessive','🧺'],['Poudre détachante','🧺'],['Éponges','🧽'],['Spray nettoyant','🧴'],['Lingettes sanitaires','🧻'],['Déboucheur','🚰'],['Vinaigre blanc','🍶'],['Produit moucherons','🦟'],['Papier aluminium','📦'],['Film étirable','📦'],['Papier cuisson','📦'],['Sacs congélation','📦'],['Serviettes en papier','🧻'],['Pailles','🥤']]],
+ ['Maison & barbecue','🔥',[['Charbon de bois','🔥'],['Allume-feu','🔥'],['Piles AAA','🔋'],['Piles LR20','🔋'],['Bougies','🕯️'],['Colle','🧴'],['Croquettes chien','🐶']]]
+];
+function frCmp(a,b){try{return a.localeCompare(b,'fr',{sensitivity:'base'});}catch(e){return a<b?-1:a>b?1:0;}}
+SHOP_CAT.forEach(function(c){c[2].sort(function(x,y){return frCmp(x[0],y[0]);});});
+SHOP_CAT.sort(function(x,y){return frCmp(x[0],y[0]);});
+var SH={open:false,cat:-1,sel:{},custom:[],t:null};
+function shId(n){return n.toLowerCase();}
+function shLoad(){try{var o=JSON.parse(localStorage.getItem('dbc')||'{}');SH.sel=o.sel||{};SH.custom=o.custom||[];}catch(e){}}
+function shSave(){try{localStorage.setItem('dbc',JSON.stringify({sel:SH.sel,custom:SH.custom}));}catch(e){}}
+function shCats(){
+  var a=SHOP_CAT.slice();
+  if(SH.custom.length) a.push(['Mes articles','🛒',SH.custom.map(function(n){return [n,'🛒'];})]);
+  return a;
+}
+function shInfo(id){ // retrouve emoji et nom d'un article
+  var a=shCats(),i,j;
+  for(i=0;i<a.length;i++)for(j=0;j<a[i][2].length;j++) if(shId(a[i][2][j][0])===id) return {n:a[i][2][j][0],e:a[i][2][j][1],c:i};
+  return {n:id,e:'🛒',c:99};
+}
+function shCount(){var n=0,k;for(k in SH.sel) n++;return n;}
+function shAdd(id){var o=SH.sel[id];if(o){o.q++;o.d=0;}else SH.sel[id]={q:1,d:0};shSave();renderShop();}
+function shQty(id,d){var o=SH.sel[id];if(!o)return;o.q+=d;if(o.q<=0)delete SH.sel[id];shSave();renderShop();}
+function shDone(id){var o=SH.sel[id];if(o){o.d=o.d?0:1;shSave();renderShop();}}
+function renderShopCard(){
+  var ids=Object.keys(SH.sel), todo=ids.filter(function(k){return !SH.sel[k].d;}), rows='';
+  todo.slice(0,5).forEach(function(k){var f=shInfo(k);rows+='<div class="srow"><i>'+f.e+'</i><span>'+esc(f.n)+'</span>'+(SH.sel[k].q>1?'<b>×'+SH.sel[k].q+'</b>':'')+'</div>';});
+  put('c-shop','<div class="label"><span>Courses</span><span class="r">'+(ids.length-todo.length>0?(ids.length-todo.length)+' pris':'')+'</span></div>'+
+    '<div class="tbig">'+todo.length+'<small>article'+(todo.length>1?'s':'')+' à acheter</small></div>'+
+    '<div class="rows">'+(rows||'<div class="tnote" style="margin-top:.8rem">La liste est vide.</div>')+(todo.length>5?'<div class="tnote" style="margin-top:.4rem">… et '+(todo.length-5)+' autre'+(todo.length-5>1?'s':'')+'</div>':'')+'</div>'+
+    '<div class="mhint">Touche pour remplir la liste</div>');
+}
+function renderShop(){
+  renderShopCard();
+  if(!SH.open) return;
+  var cats=shCats(), main='';
+  if(SH.cat<0||!cats[SH.cat]){
+    var g=cats.map(function(c,i){var n=0;c[2].forEach(function(a){if(SH.sel[shId(a[0])])n++;});
+      return '<button type="button" class="ct" data-act="cat" data-i="'+i+'"><i>'+c[1]+'</i><span>'+esc(c[0])+'</span><small>'+(n?n+' choisi'+(n>1?'s':''):c[2].length+' articles')+'</small></button>';}).join('');
+    main='<div class="label"><span>Courses</span><span class="r">Choisis un rayon</span></div><div class="sgrid cats">'+g+'</div>';
+  }else{
+    var c=cats[SH.cat], g2=c[2].map(function(a){var id=shId(a[0]),o=SH.sel[id];
+      return '<button type="button" class="at'+(o?' on':'')+'" data-act="art" data-id="'+esc(id)+'"><i>'+a[1]+'</i><span>'+esc(a[0])+'</span>'+(o?'<u>'+o.q+'</u>':'')+'</button>';}).join('');
+    main='<div class="shead"><button type="button" class="sback" data-act="home">‹ Rayons</button><b>'+c[1]+' '+esc(c[0])+'</b><span></span></div><div class="sgrid arts">'+g2+'</div>';
+  }
+  var sc=document.querySelector('#sh-main .sgrid'), st=sc?sc.scrollTop:0;
+  put('sh-main',main);
+  var nsc=document.querySelector('#sh-main .sgrid'); if(nsc&&SH.keepScroll) nsc.scrollTop=st;
+  /* liste à acheter, groupée par rayon */
+  var ids=Object.keys(SH.sel).sort(function(a,b){var x=shInfo(a),y=shInfo(b);return x.c-y.c||frCmp(x.n,y.n);}), rows='', done=0;
+  ids.forEach(function(k){var f=shInfo(k),o=SH.sel[k]; if(o.d)done++;
+    rows+='<div class="li'+(o.d?' d':'')+'"><i>'+f.e+'</i><span class="nm" data-act="done" data-id="'+esc(k)+'">'+esc(f.n)+'</span>'+
+      '<div class="qt"><button type="button" data-act="minus" data-id="'+esc(k)+'">−</button><span>'+o.q+'</span><button type="button" data-act="plus" data-id="'+esc(k)+'">+</button></div>'+
+      '<div class="ck" data-act="done" data-id="'+esc(k)+'">'+(o.d?'✓':'')+'</div></div>';});
+  var prevInput=document.getElementById('sh-new'), keep=prevInput?prevInput.value:'', foc=prevInput&&document.activeElement===prevInput;
+  var html='<div class="label"><span>À acheter</span><span class="r">'+ids.length+'</span></div>'+
+    '<div class="lst">'+(rows||'<div class="tnote" style="margin-top:.8rem">Touche un article pour l’ajouter.</div>')+'</div>'+
+    '<div class="sact"><button type="button" data-act="clear-done">Retirer les articles pris</button><button type="button" class="r" data-act="clear-all">Tout vider</button></div>'+
+    '<div class="sact"><button type="button" class="b" data-act="mail">✉️ Envoyer la liste par mail</button></div>'+
+    '<div class="sadd"><input id="sh-new" type="text" placeholder="Autre article…" maxlength="40" autocomplete="off"><button type="button" data-act="addnew">Ajouter</button></div>';
+  if(cache['sh-list']!==html){
+    var lst=document.querySelector('#sh-list .lst'), ls=lst?lst.scrollTop:0;
+    cache['sh-list']=html; document.getElementById('sh-list').innerHTML=html;
+    var nl=document.querySelector('#sh-list .lst'); if(nl) nl.scrollTop=ls;
+    var ni=document.getElementById('sh-new'); if(ni){ni.value=keep;if(foc)ni.focus();}
+  }
+  SH.keepScroll=false;
+}
+
+function shText(){
+  var by={},ids=Object.keys(SH.sel).filter(function(k){return !SH.sel[k].d;}).sort(function(a,b){var x=shInfo(a),y=shInfo(b);return x.c-y.c||frCmp(x.n,y.n);});
+  ids.forEach(function(k){var f=shInfo(k),c=f.c===99?'Mes articles':shCats()[f.c][0];(by[c]=by[c]||[]).push(f.n+(SH.sel[k].q>1?' x'+SH.sel[k].q:''));});
+  var out='Liste de courses\n';
+  Object.keys(by).forEach(function(c){out+='\n'+c.toUpperCase()+'\n';by[c].forEach(function(n){out+='☐ '+n+'\n';});});
+  return {text:out,n:ids.length};
+}
+function shMail(btn){
+  var m=shText(); if(!m.n){btn.textContent='Liste vide';setTimeout(function(){btn.textContent='✉️ Envoyer la liste par mail';},2000);return;}
+  var old='✉️ Envoyer la liste par mail';
+  function back(msg){btn.textContent=msg;setTimeout(function(){btn.textContent=old;},2500);}
+  function fallback(){location.href='mailto:?subject='+encodeURIComponent('Liste de courses')+'&body='+encodeURIComponent(m.text);back(old);}
+  if(!CONFIG.proxy||!CONFIG.key){fallback();return;}
+  btn.textContent='Envoi…';
+  var x=new XMLHttpRequest();
+  x.open('POST',api('data=mail'));x.setRequestHeader('Content-Type','text/plain;charset=utf-8');x.timeout=15000;
+  x.onload=function(){if(x.status===200)back('✓ Envoyé');else if(x.status===503)fallback();else back('Échec de l’envoi');};
+  x.onerror=x.ontimeout=function(){back('Échec de l’envoi');};
+  x.send(m.text);
+}
+function openShop(){SH.open=true;SH.cat=-1;document.getElementById('sh').className='on';renderShop();}
+function closeShop(){SH.open=false;document.getElementById('sh').className='';}
+function shopInit(){
+  shLoad();
+  document.getElementById('c-shop').addEventListener('click',openShop);
+  document.getElementById('sh-back').addEventListener('click',closeShop);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeShop();});
+  function addNew(){
+    var inp=document.getElementById('sh-new'), v=(inp.value||'').replace(/^\s+|\s+$/g,''); if(!v) return;
+    var id=shId(v), f=shInfo(id);
+    if(f.c===99) SH.custom.push(v.charAt(0).toUpperCase()+v.slice(1));
+    inp.value=''; shAdd(id);
+  }
+  document.getElementById('sh-in').addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target&&e.target.id==='sh-new'){e.preventDefault();addNew();}});
+  document.getElementById('sh-in').addEventListener('click',function(e){
+    var t=e.target; while(t&&t.getAttribute&&!t.getAttribute('data-act')) t=t.parentNode;
+    if(!t||!t.getAttribute) return; var a=t.getAttribute('data-act'), id=t.getAttribute('data-id');
+    if(a==='cat'){SH.cat=+t.getAttribute('data-i');renderShop();}
+    else if(a==='home'){SH.cat=-1;renderShop();}
+    else if(a==='art'){SH.keepScroll=true;shAdd(id);}
+    else if(a==='plus') shQty(id,1);
+    else if(a==='minus') shQty(id,-1);
+    else if(a==='done') shDone(id);
+    else if(a==='clear-done'){for(var k in SH.sel) if(SH.sel[k].d) delete SH.sel[k]; shSave(); renderShop();}
+    else if(a==='clear-all'){ if(t.getAttribute('data-c')!=='1'){t.setAttribute('data-c','1');t.textContent='Sûr ?';setTimeout(function(){t.setAttribute('data-c','0');t.textContent='Tout vider';},3000);} else {SH.sel={};shSave();renderShop();} }
+    else if(a==='addnew') addNew();
+    else if(a==='mail') shMail(t);
+  });
+  renderShop();
+}
+
 /* ---- navigation entre les pages (glisser horizontalement) ---- */
 function pagesInit(){
   var pgs=document.getElementById('pages'), els=[document.getElementById('app'),document.getElementById('p2')],
@@ -1329,11 +1516,12 @@ function render(){
   if(wx.open) renderWx();
   renderEdf();
   renderMn();
+  renderShop();
   var h=new Date().getHours(), f=CONFIG.nightFrom, t=CONFIG.nightTo;
   var night=f>t?(h>=f||h<t):(h>=f&&h<t);
   document.body.className=night?'night':'';
 }
-edtInit();wkInit();wxInit();pagesInit();mnInit();render();
+edtInit();wkInit();wxInit();pagesInit();mnInit();shopInit();render();
 fxSetup(0);fxSetup(1);fxSetup(2);requestAnimationFrame(fxLoop);
 loadConf();
 loadEdf();
