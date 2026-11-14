@@ -1023,8 +1023,8 @@ function renderEdf(){
    Enregistré sur la tablette (localStorage) ; synchronisé avec le relais si celui-ci a une base KV (data=tasks).
    ===================================================================== */
 var MEN={eur:0.25,tasks:[
-  {id:'asp',n:'Aspirateur',p:3,ic:'🧹'},{id:'wc',n:'WC',p:3,ic:'🚽'},{id:'sdb',n:'Salle de bain',p:4,ic:'🛁'},
-  {id:'tab',n:'Mettre la table',p:1,ic:'🍽️'},{id:'deb',n:'Débarrasser la table',p:1,ic:'🧺'},{id:'lv',n:'Vider le lave-vaisselle',p:2,ic:'🫧'}]};
+  {id:'asp',n:'Aspirateur',p:2,ic:'🧹'},{id:'wc',n:'WC',p:3,ic:'🚽'},{id:'sdb',n:'Salle de bain',p:3,ic:'🛁'},
+  {id:'tab',n:'Mettre la table',p:1,ic:'🍽️'},{id:'deb',n:'Débarrasser la table',p:1,ic:'🧺'},{id:'lv',n:'Vider le lave-vaisselle',p:1,ic:'🫧'}]};
 var mn={open:false,kid:-1,month:'',log:[],confirm:'',sync:'',toastT:0,last:''};
 function mnKids(){
   var a=(MEN.kids&&MEN.kids.length)?MEN.kids:PEOPLE.slice(1), r=[];
