@@ -482,7 +482,7 @@ function wkInit(){
     if((wk.open||wx.open||edf.open)&&idle>90000){closeWeek();closeWx();closeEd();}
     else if(!wk.open&&!wx.open&&!edf.open&&idle>120000&&car&&car.scrollLeft>5) car.scrollTo({left:0,behavior:'smooth'});
     var pgs=document.getElementById('pages');
-    if(!wk.open&&!wx.open&&!edf.open&&idle>180000&&pgs&&pgs.scrollLeft>5&&window.goPage) window.goPage(0);
+    if(!wk.open&&!wx.open&&!edf.open&&idle>180000&&window.curPage>0&&window.goPage) window.goPage(0);
   },5000);
 }
 
@@ -967,29 +967,53 @@ function renderEdf(){
 
 /* ---- navigation entre les pages (glisser horizontalement) ---- */
 function pagesInit(){
-  var pgs=document.getElementById('pages'), dots=document.querySelectorAll('#pg .pgd'), cur=0, N=dots.length;
+  var pgs=document.getElementById('pages'), els=[document.getElementById('app'),document.getElementById('p2')],
+      dots=document.querySelectorAll('#pg .pgd'), cur=0, N=dots.length;
+  window.curPage=0;
+  function setX(px,anim){
+    var W=pgs.clientWidth, t='translate3d('+(-cur*W+px)+'px,0,0)';
+    for(var i=0;i<els.length;i++){
+      els[i].style.webkitTransition=els[i].style.transition=anim?'transform .35s cubic-bezier(.25,.8,.25,1)':'none';
+      els[i].style.webkitTransform=els[i].style.transform=t;
+    }
+  }
   function go(i){
-    cur=Math.max(0,Math.min(N-1,i));
-    pgs.scrollTo({left:cur*pgs.clientWidth,behavior:'smooth'});
+    cur=Math.max(0,Math.min(N-1,i)); window.curPage=cur;
+    setX(0,true);
     for(var k=0;k<N;k++) dots[k].className='pgd'+(k===cur?' on':'');
   }
-  window.addEventListener('resize',function(){pgs.scrollLeft=cur*pgs.clientWidth;});
-  for(var k=0;k<N;k++)(function(k){dots[k].addEventListener('click',function(){go(k);});})(k);
-  /* glisser horizontalement pour changer de page, sauf depuis une zone qui a son propre défilement (carrousel des emplois du temps) */
-  var sx=0,sy=0,st=0,active=false;
-  function inCar(t){while(t&&t!==pgs){if(t.classList&&t.classList.contains('car'))return true;t=t.parentNode;}return false;}
-  function start(x,y,t){active=!inCar(t);sx=x;sy=y;st=Date.now();}
-  function end(x,y){
-    if(!active) return; active=false;
-    var dx=x-sx, dy=y-sy;
-    if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.4&&Date.now()-st<1200) go(cur+(dx<0?1:-1));
-  }
-  pgs.addEventListener('touchstart',function(e){var t=e.changedTouches[0];start(t.clientX,t.clientY,e.target);},{passive:true});
-  pgs.addEventListener('touchend',function(e){var t=e.changedTouches[0];end(t.clientX,t.clientY);},{passive:true});
-  pgs.addEventListener('touchcancel',function(){active=false;},{passive:true});
-  pgs.addEventListener('mousedown',function(e){start(e.clientX,e.clientY,e.target);});
-  pgs.addEventListener('mouseup',function(e){end(e.clientX,e.clientY);});
   window.goPage=go;
+  window.addEventListener('resize',function(){setX(0,false);});
+  for(var k=0;k<N;k++)(function(k){dots[k].addEventListener('click',function(){go(k);});})(k);
+
+  /* Glisser horizontalement pour changer de page (la page suit le doigt).
+     Sans effet si le geste commence sur le carrousel des emplois du temps, qui a son propre défilement. */
+  var sx=0,sy=0,st=0,lx=0,mode=0,track=false; // mode : 0 indécis, 1 horizontal, 2 vertical
+  function inCar(t){while(t&&t!==pgs){if(t.classList&&t.classList.contains('car'))return true;t=t.parentNode;}return false;}
+  function start(x,y,t){track=!inCar(t);mode=0;sx=lx=x;sy=y;st=Date.now();}
+  function move(x,y){
+    if(!track||mode===2) return;
+    var dx=x-sx, dy=y-sy; lx=x;
+    if(mode===0){
+      if(Math.abs(dx)<8&&Math.abs(dy)<8) return;
+      mode=(Math.abs(dx)>Math.abs(dy))?1:2; if(mode===2) return;
+    }
+    var off=dx; if((cur===0&&dx>0)||(cur===N-1&&dx<0)) off=dx*.25;
+    setX(off,false);
+  }
+  function end(){
+    if(!track) return; track=false;
+    if(mode!==1) return;
+    var dx=lx-sx, dt=Math.max(1,Date.now()-st), W=pgs.clientWidth;
+    if(Math.abs(dx)>W*.15||(Math.abs(dx)>30&&Math.abs(dx)/dt>.4)) go(cur+(dx<0?1:-1)); else go(cur);
+  }
+  pgs.addEventListener('touchstart',function(e){var t=e.touches[0];start(t.clientX,t.clientY,e.target);},{passive:true});
+  pgs.addEventListener('touchmove',function(e){var t=e.touches[0];move(t.clientX,t.clientY);},{passive:true});
+  pgs.addEventListener('touchend',end,{passive:true});
+  pgs.addEventListener('touchcancel',end,{passive:true});
+  pgs.addEventListener('mousedown',function(e){start(e.clientX,e.clientY,e.target);});
+  window.addEventListener('mousemove',function(e){if(track)move(e.clientX,e.clientY);});
+  window.addEventListener('mouseup',end);
   document.getElementById('e-card').addEventListener('click',openEd);
   document.getElementById('ed-back').addEventListener('click',closeEd);
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeEd();});
