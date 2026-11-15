@@ -345,6 +345,22 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
   background:rgba(255,255,255,.14);border:1px solid var(--line);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
 #sh-back span{font-size:1.6rem;line-height:0;margin-right:.35rem;position:relative;top:.1rem}
 
+/* Mobile : ?m=c */
+#sh-tabs{display:none}
+html.mob{font-size:max(15px,4vw)}
+html.mob body{background:#000}
+html.mob #pages,html.mob #pg,html.mob #sh-back{display:none!important}
+html.mob #sh-in{grid-template-columns:1fr;padding:.7rem .7rem 4.4rem;gap:.7rem}
+html.mob.tl #sh-main{display:none}
+html.mob.ta #sh-list{display:none}
+html.mob .sgrid.cats{grid-template-columns:repeat(2,1fr)}
+html.mob .sgrid.arts{grid-template-columns:repeat(3,1fr)}
+html.mob .ct{height:7rem}html.mob .at{height:6.6rem}
+html.mob .at span{font-size:.82rem}
+html.mob #sh-tabs{display:flex;position:fixed;left:.7rem;right:.7rem;bottom:.7rem;z-index:6;gap:.5rem;padding:.35rem;border-radius:2rem;background:rgba(40,40,44,.92);border:1px solid var(--line)}
+html.mob #sh-tabs button{flex:1;padding:.8rem .3rem;border-radius:1.6rem;font-size:1rem;font-weight:600;color:var(--t2);background:transparent}
+html.mob.tl #sh-tabs [data-tab=tl],html.mob.ta #sh-tabs [data-tab=ta]{background:#0a84ff;color:#fff}
+
 /* Page 2 : consommation */
 #p2{height:100vh;padding:1.1rem 1.1rem 2.7rem;display:grid;gap:1rem;grid-template-columns:1fr 1.1fr 1fr;grid-template-rows:1fr 1fr;box-sizing:border-box}
 #e-card{cursor:pointer}
@@ -422,7 +438,7 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 <div id="sh"><div class="bg"></div><div id="sh-in">
   <section class="card" id="sh-main"></section>
   <section class="card" id="sh-list"></section>
-</div><button id="sh-back" type="button"><span>‹</span>Retour</button></div>
+</div><div id="sh-tabs"><button type="button" data-tab="tl">À acheter</button><button type="button" data-tab="ta">Ajouter</button></div><button id="sh-back" type="button"><span>‹</span>Retour</button></div>
 
 <div id="mn"><div class="bg"></div><div id="mn-in">
   <section class="card" id="mn-add"></section>
@@ -443,6 +459,8 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 /* =====================================================================
    CONFIGURATION — tout ce qu'il y a à régler est ici
    ===================================================================== */
+var MOB=/[?&]m=c(&|$)/.test(location.search);
+if(MOB) document.documentElement.className='mob tl';
 var CONFIG = {
   // Adresse du relais et clé d'accès : fournies dans l'adresse de la page (?p=...&k=...),
   // jamais écrites dans ce fichier. Sans elles, la page affiche une démonstration.
@@ -662,7 +680,7 @@ function wmo(c){
    MÉTÉO (Open-Meteo, gratuit, sans clé)
    ===================================================================== */
 var fxs=[{kind:'cloud',night:false,code:3},{kind:'cloud',night:false,code:3},{kind:'cloud',night:false,code:3}];
-function loadConf(){
+function loadConf(){if(MOB)return Promise.resolve();
   if(!CONFIG.proxy||!CONFIG.key) return Promise.resolve();
   return fetchT(api('data=conf'),10000).then(function(r){return r.json();}).then(function(c){
     if(!c||!c.people) throw new Error('bad conf');
@@ -690,7 +708,7 @@ function demoWeather(k){
   return {current:{temperature_2m:k?13.6:12.4,apparent_temperature:k?12.1:10.8,weather_code:k?1:2,wind_speed_10m:k?22:14,relative_humidity_2m:k?58:71,is_day:(hr>=8&&hr<17)?1:0},
     hourly:{time:times,temperature_2m:temps,weather_code:codes,precipitation_probability:prec},daily:dl};
 }
-function loadWeather(i){
+function loadWeather(i){if(MOB)return;
   var p=CONFIG.places[i];
   var u='https://api.open-meteo.com/v1/forecast?latitude='+p.lat+'&longitude='+p.lon+
     '&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,relative_humidity_2m,is_day'+
@@ -805,7 +823,7 @@ function demoEvents(){
     at(4,18,30,120,'Réunion parents-profs','Lycée','#64d2ff')
   ];
 }
-function loadAgenda(){
+function loadAgenda(){if(MOB)return;
   if(!CONFIG.proxy||!CONFIG.key||!CONFIG.calendars.length){state.cal=demoEvents();state.calDemo=true;render();return;}
   var from=Date.now()-3600000, to=from+8*86400000, all=[], fails=0;
   Promise.all(CONFIG.calendars.map(function(c){
@@ -861,7 +879,7 @@ function durTxt(ms){
 }
 function dayWord(t,now){var k=dayDiff(now,t);return k===0?'Aujourd’hui':k===1?'Demain':JOURS[new Date(t).getDay()];}
 function dkey(t){var d=new Date(t);return ''+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate());}
-function loadRt(){
+function loadRt(){if(MOB)return;
   var T=CONFIG.train; if(!T||!CONFIG.proxy||!CONFIG.key) return;
   var n=new Date(), tr=tripFor(n); if(!tr.num||T.days.indexOf(n.getDay())<0) return;
   var h=n.getHours(); if(h<4||h>15) return;
@@ -1008,7 +1026,7 @@ function demoEdf(){
   }
   return {days:days};
 }
-function loadEdf(){
+function loadEdf(){if(MOB)return;
   if(!CONFIG.proxy||!CONFIG.key){if(!edf.data){edf.data=demoEdf();edf.demo=true;}render();return;}
   fetchT(api('data=conso'),20000).then(function(r){return r.json();}).then(function(j){
     if(!j||!j.days||!j.days.length) throw new Error('no data');
@@ -1114,7 +1132,7 @@ function mnMerge(a,b){
   for(var k in m) out.push(m[k]);
   out.sort(function(p,q){return p.t-q.t;}); return out;
 }
-function mnSync(push){
+function mnSync(push){if(MOB)return;
   if(!CONFIG.proxy||!CONFIG.key){mn.sync='local';return Promise.resolve();}
   return fetchT(api('data=tasks'),10000).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();}).then(function(j){
     mn.log=mnMerge(mn.log,(j&&j.log)||[]); mnSaveLocal();
@@ -1239,10 +1257,53 @@ var SHOP_CAT=[
 function frCmp(a,b){try{return a.localeCompare(b,'fr',{sensitivity:'base'});}catch(e){return a<b?-1:a>b?1:0;}}
 SHOP_CAT.forEach(function(c){c[2].sort(function(x,y){return frCmp(x[0],y[0]);});});
 SHOP_CAT.sort(function(x,y){return frCmp(x[0],y[0]);});
-var SH={open:false,cat:-1,sel:{},custom:[],t:null};
+var SH={open:false,cat:-1,sel:{},tomb:{},custom:[],t:null,off:0,sync:'',busy:false,again:false,timer:null};
 function shId(n){return n.toLowerCase();}
-function shLoad(){try{var o=JSON.parse(localStorage.getItem('dbc')||'{}');SH.sel=o.sel||{};SH.custom=o.custom||[];}catch(e){}}
-function shSave(){try{localStorage.setItem('dbc',JSON.stringify({sel:SH.sel,custom:SH.custom}));}catch(e){}}
+function shLoad(){try{var o=JSON.parse(localStorage.getItem('dbc')||'{}');SH.sel=o.sel||{};SH.tomb=o.tomb||{};SH.custom=o.custom||[];}catch(e){}}
+function shSave(){try{localStorage.setItem('dbc',JSON.stringify({sel:SH.sel,tomb:SH.tomb,custom:SH.custom}));}catch(e){} shDirty();}
+function shNow(){return Date.now()+SH.off;}
+function shDel(id){delete SH.sel[id];SH.tomb[id]=shNow();}
+function shMerge(a,b){ // fusion : pour chaque article, la modification la plus récente gagne
+  var sel={},tomb={},ids={},k,i;
+  [a,b].forEach(function(x){for(k in (x.sel||{}))ids[k]=1;for(k in (x.tomb||{}))ids[k]=1;});
+  for(k in ids){
+    var best=null,bt=-1,from=null;
+    [a,b].forEach(function(x){
+      var o=(x.sel||{})[k],t=(x.tomb||{})[k];
+      if(o&&(o.t||0)>bt){best=o;bt=o.t||0;from='s';}
+      if(t!==undefined&&t>bt){best=null;bt=t;from='t';}
+    });
+    if(from==='s') sel[k]=best; else if(from==='t') tomb[k]=bt;
+  }
+  var seen={},cu=[];
+  (a.custom||[]).concat(b.custom||[]).forEach(function(n){var l=n.toLowerCase();if(!seen[l]){seen[l]=1;cu.push(n);}});
+  return {sel:sel,tomb:tomb,custom:cu};
+}
+function shDirty(){
+  if(!CONFIG.proxy||!CONFIG.key) return;
+  clearTimeout(SH.timer); SH.timer=setTimeout(shSync,1200);
+}
+function shSync(){
+  if(!CONFIG.proxy||!CONFIG.key){SH.sync='local';return;}
+  if(SH.busy){SH.again=true;return;}
+  SH.busy=true;
+  var x=new XMLHttpRequest();
+  x.open('POST',api('data=courses'));x.setRequestHeader('Content-Type','text/plain;charset=utf-8');x.timeout=15000;
+  function end(st){SH.busy=false;SH.sync=st;if(SH.again){SH.again=false;shDirty();}renderShop();}
+  x.onload=function(){
+    if(x.status===503){end('local');return;}
+    if(x.status!==200){end('err');return;}
+    try{
+      var j=JSON.parse(x.responseText); if(j.now) SH.off=j.now-Date.now();
+      var m=shMerge({sel:SH.sel,tomb:SH.tomb,custom:SH.custom},j);
+      SH.sel=m.sel;SH.tomb=m.tomb;SH.custom=m.custom;
+      try{localStorage.setItem('dbc',JSON.stringify(m));}catch(e){}
+      end('ok');
+    }catch(e){end('err');}
+  };
+  x.onerror=x.ontimeout=function(){end('err');};
+  x.send(JSON.stringify({sel:SH.sel,tomb:SH.tomb,custom:SH.custom}));
+}
 function shCats(){
   var a=SHOP_CAT.slice();
   if(SH.custom.length) a.push(['Mes articles','🛒',SH.custom.map(function(n){return [n,'🛒'];})]);
@@ -1254,9 +1315,9 @@ function shInfo(id){ // retrouve emoji et nom d'un article
   return {n:id,e:'🛒',c:99};
 }
 function shCount(){var n=0,k;for(k in SH.sel) n++;return n;}
-function shAdd(id){var o=SH.sel[id];if(o){o.q++;o.d=0;}else SH.sel[id]={q:1,d:0};shSave();renderShop();}
-function shQty(id,d){var o=SH.sel[id];if(!o)return;o.q+=d;if(o.q<=0)delete SH.sel[id];shSave();renderShop();}
-function shDone(id){var o=SH.sel[id];if(o){o.d=o.d?0:1;shSave();renderShop();}}
+function shAdd(id){var o=SH.sel[id];if(o){o.q++;o.d=0;o.t=shNow();}else{SH.sel[id]={q:1,d:0,t:shNow()};delete SH.tomb[id];}shSave();renderShop();}
+function shQty(id,d){var o=SH.sel[id];if(!o)return;o.q+=d;o.t=shNow();if(o.q<=0)shDel(id);shSave();renderShop();}
+function shDone(id){var o=SH.sel[id];if(o){o.d=o.d?0:1;o.t=shNow();shSave();renderShop();}}
 function renderShopCard(){
   var ids=Object.keys(SH.sel), todo=ids.filter(function(k){return !SH.sel[k].d;}), rows='';
   todo.slice(0,5).forEach(function(k){var f=shInfo(k);rows+='<div class="srow"><i>'+f.e+'</i><span>'+esc(f.n)+'</span>'+(SH.sel[k].q>1?'<b>×'+SH.sel[k].q+'</b>':'')+'</div>';});
@@ -1288,7 +1349,8 @@ function renderShop(){
       '<div class="qt"><button type="button" data-act="minus" data-id="'+esc(k)+'">−</button><span>'+o.q+'</span><button type="button" data-act="plus" data-id="'+esc(k)+'">+</button></div>'+
       '<div class="ck" data-act="done" data-id="'+esc(k)+'">'+(o.d?'✓':'')+'</div></div>';});
   var prevInput=document.getElementById('sh-new'), keep=prevInput?prevInput.value:'', foc=prevInput&&document.activeElement===prevInput;
-  var html='<div class="label"><span>À acheter</span><span class="r">'+ids.length+'</span></div>'+
+  var stx=SH.sync==='ok'?'● synchronisé':SH.sync==='err'?'○ hors ligne':'';
+  var html='<div class="label"><span>À acheter</span><span class="r">'+(stx?stx+' · ':'')+ids.length+'</span></div>'+
     '<div class="lst">'+(rows||'<div class="tnote" style="margin-top:.8rem">Touche un article pour l’ajouter.</div>')+'</div>'+
     '<div class="sact"><button type="button" data-act="clear-done">Retirer les articles pris</button><button type="button" class="r" data-act="clear-all">Tout vider</button></div>'+
     '<div class="sact"><button type="button" class="b" data-act="mail">✉️ Envoyer la liste par mail</button></div>'+
@@ -1299,6 +1361,7 @@ function renderShop(){
     var nl=document.querySelector('#sh-list .lst'); if(nl) nl.scrollTop=ls;
     var ni=document.getElementById('sh-new'); if(ni){ni.value=keep;if(foc)ni.focus();}
   }
+  var tb=document.querySelector('#sh-tabs [data-tab=tl]'); if(tb) tb.textContent='À acheter'+(ids.length?' ('+(ids.length-done)+')':'');
   SH.keepScroll=false;
 }
 
@@ -1323,9 +1386,19 @@ function shMail(btn){
   x.send(m.text);
 }
 function openShop(){SH.open=true;SH.cat=-1;document.getElementById('sh').className='on';renderShop();}
-function closeShop(){SH.open=false;document.getElementById('sh').className='';}
+function closeShop(){if(SH.mob)return;SH.open=false;document.getElementById('sh').className='';}
 function shopInit(){
   shLoad();
+  if(MOB){
+    SH.mob=true; SH.open=true; document.getElementById('sh').className='on';
+    document.getElementById('sh-tabs').addEventListener('click',function(e){
+      var t=e.target.getAttribute&&e.target.getAttribute('data-tab'); if(!t) return;
+      document.documentElement.className='mob '+t; renderShop();
+    });
+  }
+  setInterval(function(){if(!document.hidden) shSync();},(MOB||SH.open)?20000:60000);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden) shSync();});
+  setTimeout(shSync,800);
   document.getElementById('c-shop').addEventListener('click',openShop);
   document.getElementById('sh-back').addEventListener('click',closeShop);
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeShop();});
@@ -1345,8 +1418,8 @@ function shopInit(){
     else if(a==='plus') shQty(id,1);
     else if(a==='minus') shQty(id,-1);
     else if(a==='done') shDone(id);
-    else if(a==='clear-done'){for(var k in SH.sel) if(SH.sel[k].d) delete SH.sel[k]; shSave(); renderShop();}
-    else if(a==='clear-all'){ if(t.getAttribute('data-c')!=='1'){t.setAttribute('data-c','1');t.textContent='Sûr ?';setTimeout(function(){t.setAttribute('data-c','0');t.textContent='Tout vider';},3000);} else {SH.sel={};shSave();renderShop();} }
+    else if(a==='clear-done'){for(var k in SH.sel) if(SH.sel[k].d) shDel(k); shSave(); renderShop();}
+    else if(a==='clear-all'){ if(t.getAttribute('data-c')!=='1'){t.setAttribute('data-c','1');t.textContent='Sûr ?';setTimeout(function(){t.setAttribute('data-c','0');t.textContent='Tout vider';},3000);} else {for(var k2 in SH.sel) shDel(k2);shSave();renderShop();} }
     else if(a==='addnew') addNew();
     else if(a==='mail') shMail(t);
   });
