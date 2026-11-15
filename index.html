@@ -78,6 +78,9 @@ body.night{filter:brightness(.38)}
 .cd{display:inline-block;padding:.3rem .85rem;border-radius:2rem;font-weight:600;font-size:1rem;color:#fff;background:var(--blue)}
 .cd.warn{background:var(--orange);color:#1a1000}
 .cd.urgent{background:var(--red)}
+.rt{display:inline-block;margin-left:.5rem;padding:.2rem .65rem;border-radius:2rem;font-size:.85rem;font-weight:600;background:rgba(255,255,255,.14);color:var(--t1);vertical-align:middle}
+.rt.late{background:var(--orange);color:#1a1000}.rt.cancel{background:var(--red);color:#fff}
+.tmsg{margin-top:.5rem;font-size:.82rem;color:var(--orange);line-height:1.25;max-height:2.6em;overflow:hidden}
 .tthen{margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding:.8rem 0;
   border-top:1px solid var(--line);font-size:.98rem}
 .tthen b{font-weight:500;font-size:1.15rem;font-feature-settings:"tnum" 1}
@@ -665,7 +668,7 @@ function loadConf(){
     if(!c||!c.people) throw new Error('bad conf');
     CONFIG.places=c.places;CONFIG.train=c.train;if(c.calendars)CONFIG.calendars=c.calendars;PEOPLE=c.people;if(c.menage){for(var mk in c.menage)MEN[mk]=c.menage[mk];}
     state.conf=true;state.weather=[null,null];state.weatherOk=[false,false];cache={};
-    edtInit();render();loadWeather(0);loadWeather(1);loadAgenda();loadEdf();mnSync(false);
+    edtInit();render();loadWeather(0);loadWeather(1);loadAgenda();loadEdf();loadRt();mnSync(false);
   }).catch(function(){});
 }
 var state={weather:[null,null],weatherOk:[false,false],cal:null,calDemo:false,edt:null,calOk:null};
@@ -833,14 +836,20 @@ function renderAgenda(){
 /* =====================================================================
    TRAINS (horaires théoriques)
    ===================================================================== */
+function tripFor(d){
+  var T=CONFIG.train, x=T.trips&&T.trips[d.getDay()];
+  if(x&&x.A) x=x[weekLetter(d)];
+  return x||{out:T.out,num:T.num||''};
+}
 function departures(now){
   var T=CONFIG.train, out=[];
   for(var i=0;i<9;i++){
     var d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+i);
     if(T.days.indexOf(d.getDay())<0) continue;
-    [[T.out,T.from,T.to],[T.back,T.to,T.from]].forEach(function(x){
+    var tr=tripFor(d);
+    [[tr.out,T.from,T.to,tr.num||''],[T.back,T.to,T.from,'']].forEach(function(x){
       var a=x[0].split(':'), t=new Date(d.getFullYear(),d.getMonth(),d.getDate(),+a[0],+a[1]).getTime();
-      if(t>now.getTime()) out.push({t:t,time:x[0],from:x[1],to:x[2]});
+      if(t>now.getTime()) out.push({t:t,time:x[0],from:x[1],to:x[2],num:x[3]});
     });
   }
   return out.sort(function(a,b){return a.t-b.t;});
@@ -851,13 +860,28 @@ function durTxt(ms){
   return Math.floor(h/24)+' j '+(h%24)+' h';
 }
 function dayWord(t,now){var k=dayDiff(now,t);return k===0?'Aujourd’hui':k===1?'Demain':JOURS[new Date(t).getDay()];}
+function dkey(t){var d=new Date(t);return ''+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate());}
+function loadRt(){
+  var T=CONFIG.train; if(!T||!CONFIG.proxy||!CONFIG.key) return;
+  var n=new Date(), tr=tripFor(n); if(!tr.num||T.days.indexOf(n.getDay())<0) return;
+  var h=n.getHours(); if(h<4||h>15) return;
+  fetchT(api('data=train&num='+encodeURIComponent(tr.num)+'&base='+encodeURIComponent(tr.out)),10000).then(function(r){return r.ok?r.json():null;}).then(function(j){if(j){state.rt=j;render();}}).catch(function(){});
+}
 function renderTrain(){
   var now=new Date(), dep=departures(now), T=CONFIG.train, a=dep[0], b=dep[1];
   var body='';
   if(a){
+    var rt=(state.rt&&state.rt.found&&a.num&&state.rt.num===a.num&&state.rt.day===dkey(a.t))?state.rt:null, tt=a.time, tag='', ex='';
+    if(rt){
+      if(rt.status==='supprime'){tag='<span class="rt cancel">Supprimé</span>';}
+      else if(rt.delay>0){tt=rt.real;a={t:a.t+rt.delay*60000,time:rt.real,from:a.from,to:a.to,num:a.num};tag='<span class="rt late">+'+rt.delay+' min</span>';}
+      else tag='<span class="rt">À l’heure</span>';
+      if(rt.msg) ex='<div class="tmsg">'+esc(rt.msg)+'</div>';
+    }
+    if(!a.num&&T.backArr) ex='<div class="tmsg" style="color:var(--t2)">Arrivée à '+esc(a.to)+' vers '+esc(T.backArr)+'</div>';
     var ms=a.t-now.getTime(), cls=ms<15*60000?'urgent':ms<60*60000?'warn':'';
-    body+='<div class="tnext"><div class="tt">'+a.time+'</div><div class="route">'+esc(a.from)+'<span>→</span>'+esc(a.to)+'</div>'+
-      '<div class="when"><span class="cd '+cls+'">dans '+durTxt(ms)+'</span><span>'+esc(cap(dayWord(a.t,now.getTime())))+'</span></div></div>';
+    body+='<div class="tnext"><div class="tt">'+tt+(tag?tag:'')+'</div><div class="route">'+esc(a.from)+'<span>→</span>'+esc(a.to)+'</div>'+
+      '<div class="when"><span class="cd '+cls+'">dans '+durTxt(ms)+'</span><span>'+esc(cap(dayWord(a.t,now.getTime())))+'</span></div>'+ex+'</div>';
   }else body+='<div class="empty">Aucun train programmé.</div>';
   if(b) body+='<div class="tthen"><span>Ensuite · '+esc(dayWord(b.t,now.getTime()))+'</span><b>'+b.time+' <span>'+esc(b.from)+'</span></b></div>';
   var L=['L','M','M','J','V','S','D'], dots='';
@@ -1526,6 +1550,7 @@ fxSetup(0);fxSetup(1);fxSetup(2);requestAnimationFrame(fxLoop);
 loadConf();
 loadEdf();
 setInterval(loadEdf,60*60000);
+setInterval(loadRt,3*60000);
 setInterval(function(){mnSync(false);},15*60000);
 setInterval(function(){if(!state.conf)loadConf();},60000);
 loadWeather(0);loadWeather(1);loadAgenda();
