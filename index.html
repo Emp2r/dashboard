@@ -395,6 +395,43 @@ html.mob.tl #sh-tabs [data-tab=tl],html.mob.ta #sh-tabs [data-tab=ta]{background
   background:rgba(255,255,255,.14);border:1px solid var(--line);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
 #tm-back span{font-size:1.6rem;line-height:0;margin-right:.35rem;position:relative;top:.1rem}
 
+/* Assistant IA */
+#c-ia{grid-column:2 / 4;grid-row:2;cursor:pointer;justify-content:space-between;background:linear-gradient(150deg,rgba(10,132,255,.2),rgba(94,92,230,.16) 60%,rgba(255,255,255,.03))}
+.iap{display:flex;align-items:center;gap:.8rem;padding:1rem 1.3rem;border-radius:2rem;background:rgba(255,255,255,.1);border:1px solid var(--line);font-size:1.25rem;color:var(--t2)}
+.iap i{font-style:normal;font-size:1.5rem;color:#64d2ff}
+.iac{display:flex;flex-wrap:wrap;gap:.6rem}
+.iac button,.iasug button{padding:.65rem 1.1rem;border-radius:2rem;background:rgba(255,255,255,.1);color:var(--t1);font-size:1rem;font-weight:500}
+.iac button:active,.iasug button:active{background:rgba(255,255,255,.25)}
+#ia{position:fixed;left:0;top:0;right:0;bottom:0;z-index:100;display:none;background:#000}
+#ia.on{display:block}
+#ia .bg{position:absolute}
+#ia-in{position:relative;z-index:1;height:100%;padding:1rem 1.2rem 4.6rem;box-sizing:border-box;display:flex;flex-direction:column;gap:.9rem}
+#ia-bar{display:flex;gap:.7rem;flex:none}
+#ia-q{flex:1;min-width:0;padding:1rem 1.4rem;border-radius:2rem;border:1px solid var(--line);background:rgba(255,255,255,.12);color:var(--t1);font-size:1.35rem;font-family:inherit;outline:none;-webkit-appearance:none}
+#ia-q:focus{border-color:#0a84ff;background:rgba(255,255,255,.16)}
+#ia-go{padding:0 2rem;border-radius:2rem;background:#0a84ff;color:#fff;font-size:1.25rem;font-weight:700}
+#ia-go[disabled]{opacity:.4}
+#ia-card{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.iaq{font-size:.95rem;color:var(--t2);margin-bottom:.5rem}
+.iaa{font-size:1.28rem;line-height:1.5;max-width:78rem}
+.iasecs{display:grid;grid-template-columns:1fr 1.25fr;gap:0 2.6rem;align-items:start}
+.iasec:only-child{grid-column:1 / 3}
+.iaa h2{font-size:2rem;font-weight:700;margin:0 0 .4rem}
+.iaa h3{font-size:1.2rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64d2ff;margin:1rem 0 .4rem}
+.iaa p{margin:.3rem 0}
+.iaa ul,.iaa ol{margin:.2rem 0 .6rem;padding-left:1.5rem}
+.iaa li{margin:.3rem 0}
+.iaa b{font-weight:700}
+.iamsg{font-size:1.4rem;color:var(--t2);padding:2rem .5rem;text-align:center}
+.iamsg.err{color:#ff8a80;font-size:1.15rem}
+.iasug{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;margin-top:1rem}
+.iasug button{font-size:1.15rem;padding:.9rem 1.4rem}
+.iadots span{animation:iab 1.2s infinite both;display:inline-block}.iadots span:nth-child(2){animation-delay:.2s}.iadots span:nth-child(3){animation-delay:.4s}
+@keyframes iab{0%,80%,100%{opacity:.2}40%{opacity:1}}
+#ia-back{position:absolute;right:1.4rem;bottom:1.2rem;z-index:5;padding:.8rem 1.7rem .8rem 1.2rem;border-radius:2rem;font-size:1.1rem;font-weight:600;
+  background:rgba(255,255,255,.14);border:1px solid var(--line);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+#ia-back span{font-size:1.6rem;line-height:0;margin-right:.35rem;position:relative;top:.1rem}
+
 /* Citation du jour */
 #c-quote{justify-content:space-between;background:linear-gradient(160deg,rgba(255,159,10,.16),rgba(191,90,242,.12) 70%,rgba(255,255,255,.03))}
 .qbody{flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;min-height:0;animation:qin 1.2s ease both}
@@ -472,11 +509,14 @@ html.mob.tl #sh-tabs [data-tab=tl],html.mob.ta #sh-tabs [data-tab=ta]{background
   <section class="card" id="m-card"></section>
   <section class="card" id="c-shop"></section>
   <section class="card" id="c-edt"></section>
+  <section class="card" id="c-ia"></section>
 </div>
 </div>
 <div id="pg"><i class="pgd on"></i><i class="pgd"></i></div>
 
 <div id="wx"><div class="bg"></div><canvas class="fx"></canvas><div id="wx-in"></div><button id="wx-back" type="button"><span>‹</span>Retour</button></div>
+
+<div id="ia"><div class="bg"></div><div id="ia-in"><div id="ia-bar"><input id="ia-q" type="text" enterkeyhint="send" autocomplete="off" autocorrect="off" placeholder="Pose ta question ou cherche une recette…"><button id="ia-go" type="button">Envoyer</button></div><section class="card" id="ia-card"></section></div><button id="ia-back" type="button"><span>‹</span>Retour</button></div>
 
 <div id="tm"><div class="bg"></div><div id="tm-in"><section class="card" id="tm-main"></section><section class="card" id="tm-side"></section></div><button id="tm-back" type="button"><span>‹</span>Retour</button></div>
 
@@ -647,11 +687,11 @@ function wkInit(){
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeWeek();});
   ['touchstart','mousedown','keydown','scroll'].forEach(function(ev){document.addEventListener(ev,function(){lastTouch=Date.now();},true);});
   setInterval(function(){          // retour automatique si personne ne touche l'écran
-    var idle=Date.now()-lastTouch, car=document.getElementById('car');
+    var idle=Date.now()-lastTouch, car=document.getElementById('car'), any=wk.open||wx.open||edf.open||mn.open||SH.open||TM.open||IA.open;
+    if(IA.open&&idle>600000) closeIa();
     if((wk.open||wx.open||edf.open||mn.open||SH.open||TM.open)&&idle>90000){closeWeek();closeWx();closeEd();closeMn();closeShop();closeTm();}
-    else if(!wk.open&&!wx.open&&!edf.open&&!mn.open&&!SH.open&&!TM.open&&idle>120000&&car&&car.scrollLeft>5) car.scrollTo({left:0,behavior:'smooth'});
-    var pgs=document.getElementById('pages');
-    if(!wk.open&&!wx.open&&!edf.open&&!mn.open&&!SH.open&&!TM.open&&idle>180000&&window.curPage>0&&window.goPage) window.goPage(0);
+    else if(!any&&idle>120000&&car&&car.scrollLeft>5) car.scrollTo({left:0,behavior:'smooth'});
+    if(!any&&idle>180000&&window.curPage>0&&window.goPage) window.goPage(0);
   },5000);
 }
 
@@ -1595,6 +1635,80 @@ function tmInit(){
   });
   setInterval(tmTick,500);
 }
+/* ---- Assistant IA (Gemini via le Worker) ---- */
+var IA={open:false,busy:false,q:'',text:'',err:'',hist:[],tok:0};
+var IA_SUG=['Une recette rapide pour ce soir','Un dessert facile pour 6','Que faire avec des restes de poulet ?','Idée de menu pour la semaine'];
+function iaMd(t){
+  var L=esc(t).split(/\r?\n/), head='', secs=[], h='', mode='', inSec=false;
+  function close(){if(mode){h+='</'+mode+'>';mode='';}}
+  function flush(){close(); if(inSec){secs.push(h);} else {head+=h;} h='';}
+  function inl(x){return x.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');}
+  for(var i=0;i<L.length;i++){
+    var l=L[i], m;
+    if(/^\s*$/.test(l)){close();continue;}
+    if((m=/^###+\s+(.*)$/.exec(l))){flush();inSec=true;h='<h3>'+inl(m[1])+'</h3>';}
+    else if((m=/^##?\s+(.*)$/.exec(l))){h+=(mode?'</'+mode+'>':'')+'<h2>'+inl(m[1])+'</h2>';mode='';}
+    else if((m=/^\s*[-*•]\s+(.*)$/.exec(l))){if(mode!=='ul'){close();h+='<ul>';mode='ul';}h+='<li>'+inl(m[1])+'</li>';}
+    else if((m=/^\s*\d+[.)]\s+(.*)$/.exec(l))){if(mode!=='ol'){close();h+='<ol>';mode='ol';}h+='<li>'+inl(m[1])+'</li>';}
+    else{close();h+='<p>'+inl(l)+'</p>';}
+  }
+  flush();
+  return head+(secs.length?'<div class="iasecs">'+secs.map(function(x){return '<div class="iasec">'+x+'</div>';}).join('')+'</div>':'');
+}
+function iaSugHtml(){return '<div class="iamsg">Que veux-tu savoir ou cuisiner ?</div><div class="iasug">'+IA_SUG.map(function(x){return '<button type="button" data-ia="'+esc(x)+'">'+esc(x)+'</button>';}).join('')+'</div>';}
+function renderIaCard(){
+  return '<div class="label"><span>Assistant</span><span class="r">Gemini</span></div>'+
+    '<div class="iap"><i>✦</i><span>Cherche une recette, pose une question…</span></div>'+
+    '<div class="iac">'+IA_SUG.slice(0,3).map(function(x){return '<button type="button" data-ia="'+esc(x)+'">'+esc(x)+'</button>';}).join('')+'</div>';
+}
+function renderIa(){
+  if(!IA.open) return;
+  var body;
+  if(IA.busy) body='<div class="iaq">'+esc(IA.q)+'</div><div class="iamsg iadots">Je cherche<span>.</span><span>.</span><span>.</span></div>';
+  else if(IA.err) body='<div class="iaq">'+esc(IA.q)+'</div><div class="iamsg err">'+esc(IA.err)+'</div>';
+  else if(IA.text) body='<div class="iaq">'+esc(IA.q)+'</div><div class="iaa">'+iaMd(IA.text)+'</div>';
+  else body=iaSugHtml();
+  put('ia-card',body);
+  document.getElementById('ia-go').disabled=IA.busy;
+}
+function openIa(q){
+  IA.open=true; if(!q) IA.err=''; document.getElementById('ia').className='on'; renderIa();
+  if(q) askIa(q); else { var i=document.getElementById('ia-q'); try{i.focus();}catch(e){} }
+}
+function closeIa(){IA.open=false;IA.tok++;IA.busy=false;document.getElementById('ia').className='';var i=document.getElementById('ia-q');try{i.blur();}catch(e){}}
+function askIa(q){
+  q=String(q||'').replace(/^\s+|\s+$/g,''); if(!q||IA.busy) return;
+  var i=document.getElementById('ia-q'); i.value=''; try{i.blur();}catch(e){}
+  IA.q=q; IA.busy=true; IA.err=''; IA.text=''; var tok=++IA.tok; renderIa();
+  if(!CONFIG.proxy){IA.busy=false;IA.err='Assistant non configuré (Worker privé absent).';renderIa();return;}
+  var done=false, tmo=setTimeout(function(){fin(null,'Trop long, réessaie.');},60000);
+  function fin(txt,err){
+    if(done||tok!==IA.tok) return; done=true; clearTimeout(tmo);
+    IA.busy=false;
+    if(txt){IA.text=txt;IA.hist.push({r:'user',t:q},{r:'model',t:txt});if(IA.hist.length>8)IA.hist=IA.hist.slice(-8);}
+    else IA.err=err||'Pas de réponse.';
+    renderIa();
+  }
+  fetch(api('data=ia'),{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({q:q,hist:IA.hist})})
+    .then(function(r){return r.json().catch(function(){return {error:'Réponse invalide (HTTP '+r.status+')'};});})
+    .then(function(j){ if(j&&j.text) fin(j.text); else fin(null,(j&&j.error)||'Erreur'); })
+    .catch(function(){fin(null,'Connexion impossible.');});
+}
+function iaInit(){
+  if(MOB) return;
+  document.getElementById('c-ia').addEventListener('click',function(e){
+    var t=e.target; while(t&&t!==this&&!(t.getAttribute&&t.getAttribute('data-ia'))) t=t.parentNode;
+    if(t&&t!==this&&t.getAttribute('data-ia')){e.stopPropagation();openIa(t.getAttribute('data-ia'));return;}
+    openIa();
+  });
+  document.getElementById('ia-card').addEventListener('click',function(e){
+    var t=e.target; if(t&&t.getAttribute&&t.getAttribute('data-ia')) askIa(t.getAttribute('data-ia'));
+  });
+  document.getElementById('ia-go').addEventListener('click',function(){askIa(document.getElementById('ia-q').value);});
+  document.getElementById('ia-q').addEventListener('keydown',function(e){if(e.key==='Enter'||e.keyCode===13){e.preventDefault();askIa(this.value);}});
+  document.getElementById('ia-back').addEventListener('click',closeIa);
+}
+
 var QUOTES=[["On ne voit bien qu’avec le cœur. L’essentiel est invisible pour les yeux.", "Antoine de Saint-Exupéry"], ["Ce qui embellit le désert, c’est qu’il cache un puits quelque part.", "Antoine de Saint-Exupéry"], ["Pour ce qui est de l’avenir, il ne s’agit pas de le prévoir, mais de le rendre possible.", "Antoine de Saint-Exupéry"], ["Aimer, ce n’est pas se regarder l’un l’autre, c’est regarder ensemble dans la même direction.", "Antoine de Saint-Exupéry"], ["C’est le temps que tu as perdu pour ta rose qui fait ta rose si importante.", "Antoine de Saint-Exupéry"], ["Tu deviens responsable pour toujours de ce que tu as apprivoisé.", "Antoine de Saint-Exupéry"], ["Vivre, c’est naître lentement.", "Antoine de Saint-Exupéry"], ["Il faut imaginer Sisyphe heureux.", "Albert Camus"], ["Au milieu de l’hiver, j’apprenais enfin qu’il y avait en moi un été invincible.", "Albert Camus"], ["Rien ne sert de courir ; il faut partir à point.", "Jean de La Fontaine"], ["Patience et longueur de temps font plus que force ni que rage.", "Jean de La Fontaine"], ["On a souvent besoin d’un plus petit que soi.", "Jean de La Fontaine"], ["Aide-toi, le ciel t’aidera.", "Jean de La Fontaine"], ["Science sans conscience n’est que ruine de l’âme.", "François Rabelais"], ["Appétit vient en mangeant.", "François Rabelais"], ["Je pense, donc je suis.", "René Descartes"], ["Le cœur a ses raisons que la raison ne connaît point.", "Blaise Pascal"], ["Toute notre dignité consiste donc en la pensée.", "Blaise Pascal"], ["Ce n’est pas parce que les choses sont difficiles que nous n’osons pas, c’est parce que nous n’osons pas qu’elles sont difficiles.", "Sénèque"], ["Ce n’est pas que nous ayons peu de temps, mais nous en perdons beaucoup.", "Sénèque"], ["Nous souffrons plus souvent en imagination qu’en réalité.", "Sénèque"], ["Un voyage de mille lieues commence toujours par un premier pas.", "Lao Tseu"], ["L’imagination est plus importante que le savoir.", "Albert Einstein"], ["La vie, c’est comme une bicyclette, il faut avancer pour ne pas perdre l’équilibre.", "Albert Einstein"], ["Le rire est le propre de l’homme.", "François Rabelais"], ["Ouvrir une école, c’est fermer une prison.", "Victor Hugo"], ["Rien n’est permanent, sauf le changement.", "Héraclite"], ["On ne se baigne jamais deux fois dans le même fleuve.", "Héraclite"], ["Connais-toi toi-même.", "Inscription du temple de Delphes"], ["Cueille le jour présent.", "Horace"], ["Un esprit sain dans un corps sain.", "Juvénal"], ["Le bonheur, c’est de continuer à désirer ce que l’on possède.", "Saint Augustin"], ["Le temps est un grand maître, dit-on. Le malheur est qu’il tue ses élèves.", "Hector Berlioz"], ["Ce qu’on conçoit bien s’énonce clairement, et les mots pour le dire arrivent aisément.", "Nicolas Boileau"], ["Vingt fois sur le métier remettez votre ouvrage.", "Nicolas Boileau"], ["Qui veut voyager loin ménage sa monture.", "Jean Racine"], ["Il faut manger pour vivre et non pas vivre pour manger.", "Molière"], ["La seule chose que nous ayons à craindre, c’est la crainte elle-même.", "Franklin D. Roosevelt"], ["Pour vivre heureux, vivons cachés.", "Jean-Pierre Claris de Florian"], ["Il faut cultiver notre jardin.", "Voltaire"], ["Le travail éloigne de nous trois grands maux : l’ennui, le vice et le besoin.", "Voltaire"], ["Rien de grand ne s’est accompli dans le monde sans passion.", "Hegel"], ["Ce qui ne me tue pas me rend plus fort.", "Friedrich Nietzsche"], ["Il faut avoir du chaos en soi pour accoucher d’une étoile dansante.", "Friedrich Nietzsche"], ["L’espoir est un risque à courir.", "Georges Bernanos"], ["Il y a plus de choses au ciel et sur la terre que n’en rêve votre philosophie.", "William Shakespeare"], ["Le courage n’est pas l’absence de peur, mais la capacité de la vaincre.", "Nelson Mandela"], ["L’éducation est l’arme la plus puissante pour changer le monde.", "Nelson Mandela"], ["Un enfant, un enseignant, un livre et un stylo peuvent changer le monde.", "Malala Yousafzai"], ["Enseigner, c’est apprendre deux fois.", "Joseph Joubert"], ["L’esprit n’est pas un vase qu’on remplit, mais un feu qu’on allume.", "Plutarque"], ["Le véritable voyage de découverte ne consiste pas à chercher de nouveaux paysages, mais à avoir de nouveaux yeux.", "Marcel Proust"], ["Notre vie est ce que nos pensées en font.", "Marc Aurèle"], ["Ce n’est pas ce qui nous arrive qui nous trouble, mais le jugement que nous portons sur ce qui nous arrive.", "Épictète"], ["Dans la vie, rien n’est à craindre, tout est à comprendre.", "Marie Curie"], ["Le hasard ne favorise que les esprits préparés.", "Louis Pasteur"], ["La paresse, c’est l’habitude de se reposer avant d’être fatigué.", "Jules Renard"], ["Le pessimisme est d’humeur, l’optimisme est de volonté.", "Alain"], ["Pour exécuter de grandes choses, il faut vivre comme si on ne devait jamais mourir.", "Vauvenargues"], ["Les grandes pensées viennent du cœur.", "Vauvenargues"], ["Je ne peins pas l’être, je peins le passage.", "Michel de Montaigne"], ["La plus grande chose du monde, c’est de savoir être à soi.", "Michel de Montaigne"], ["La vie est trop courte pour être petite.", "Benjamin Disraeli"], ["La critique est aisée, mais l’art est difficile.", "Philippe Néricault Destouches"], ["C’est en forgeant qu’on devient forgeron.", "Proverbe"], ["Les petits ruisseaux font les grandes rivières.", "Proverbe"], ["Après la pluie, le beau temps.", "Proverbe"], ["Tout vient à point à qui sait attendre.", "Proverbe"], ["Mieux vaut prévenir que guérir.", "Proverbe"], ["Quand on veut, on peut.", "Proverbe"], ["Les voyages forment la jeunesse.", "Proverbe"], ["Petit à petit, l’oiseau fait son nid.", "Proverbe"], ["Rira bien qui rira le dernier.", "Proverbe"], ["Mieux vaut tard que jamais.", "Proverbe"], ["À cœur vaillant rien d’impossible.", "Proverbe"], ["La nuit porte conseil.", "Proverbe"], ["L’union fait la force.", "Proverbe"], ["Il faut battre le fer quand il est chaud.", "Proverbe"], ["Qui sème le vent récolte la tempête.", "Proverbe"], ["Chacun voit midi à sa porte.", "Proverbe"], ["Mieux vaut un tiens que deux tu l’auras.", "Proverbe"]];
 
 function quoteIdx(d){
@@ -1787,6 +1901,7 @@ var cache={};
 function put(id,html){if(cache[id]!==html){cache[id]=html;document.getElementById(id).innerHTML=html;}}
 function render(){
   put('c-quote',renderQuote());
+  put('c-ia',renderIaCard());
   put('c-clock',renderClock());
   document.getElementById('c-clock').className='card'+(TM.state==='done'?' alarm':'');
   put('w0',renderWeather(0));
@@ -1803,7 +1918,7 @@ function render(){
   var night=f>t?(h>=f||h<t):(h>=f&&h<t);
   document.body.className=night?'night':'';
 }
-edtInit();wkInit();wxInit();pagesInit();mnInit();shopInit();tmInit();render();
+edtInit();wkInit();wxInit();pagesInit();mnInit();shopInit();tmInit();iaInit();render();
 fxSetup(0);fxSetup(1);fxSetup(2);requestAnimationFrame(fxLoop);
 loadConf();
 loadEdf();
