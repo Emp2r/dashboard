@@ -1303,7 +1303,7 @@ var SHOP_CAT=[
 function frCmp(a,b){try{return a.localeCompare(b,'fr',{sensitivity:'base'});}catch(e){return a<b?-1:a>b?1:0;}}
 SHOP_CAT.forEach(function(c){c[2].sort(function(x,y){return frCmp(x[0],y[0]);});});
 SHOP_CAT.sort(function(x,y){return frCmp(x[0],y[0]);});
-var SH={open:false,cat:-1,sel:{},tomb:{},custom:[],t:null,off:0,sync:'',busy:false,again:false,timer:null};
+var SH={open:false,cat:-1,sel:{},tomb:{},custom:[],t:null,off:0,sync:'',busy:false,again:false,timer:null,pending:false,last:0};
 function shId(n){return n.toLowerCase();}
 function shLoad(){try{var o=JSON.parse(localStorage.getItem('dbc')||'{}');SH.sel=o.sel||{};SH.tomb=o.tomb||{};SH.custom=o.custom||[];}catch(e){}}
 function shSave(){try{localStorage.setItem('dbc',JSON.stringify({sel:SH.sel,tomb:SH.tomb,custom:SH.custom}));}catch(e){} shDirty();}
@@ -1325,16 +1325,24 @@ function shMerge(a,b){ // fusion : pour chaque article, la modification la plus 
   (a.custom||[]).concat(b.custom||[]).forEach(function(n){var l=n.toLowerCase();if(!seen[l]){seen[l]=1;cu.push(n);}});
   return {sel:sel,tomb:tomb,custom:cu};
 }
-function shDirty(){
+function shSig(x){
+  var a=Object.keys(x.sel||{}).sort().map(function(k){var o=x.sel[k];return k+':'+o.q+(o.d?'d':'')+':'+(o.t||0);});
+  var b=Object.keys(x.tomb||{}).sort().map(function(k){return k+'!'+x.tomb[k];});
+  return a.join('|')+'#'+b.join('|')+'#'+(x.custom||[]).map(function(n){return n.toLowerCase();}).sort().join('|');
+}
+function shDirty(){ // une modification locale : à envoyer (c'est le SEUL cas où on écrit côté serveur)
+  SH.pending=true;
   if(!CONFIG.proxy||!CONFIG.key) return;
   clearTimeout(SH.timer); SH.timer=setTimeout(shSync,1200);
 }
 function shSync(){
   if(!CONFIG.proxy||!CONFIG.key){SH.sync='local';return;}
   if(SH.busy){SH.again=true;return;}
-  SH.busy=true;
-  var x=new XMLHttpRequest();
-  x.open('POST',api('data=courses'));x.setRequestHeader('Content-Type','text/plain;charset=utf-8');x.timeout=15000;
+  SH.busy=true; SH.last=Date.now();
+  var push=!!SH.pending, x=new XMLHttpRequest();
+  x.open(push?'POST':'GET',api('data=courses'));
+  if(push) x.setRequestHeader('Content-Type','text/plain;charset=utf-8');
+  x.timeout=15000;
   function end(st){SH.busy=false;SH.sync=st;if(SH.again){SH.again=false;shDirty();}renderShop();}
   x.onload=function(){
     if(x.status===503){end('local');return;}
@@ -1342,13 +1350,16 @@ function shSync(){
     try{
       var j=JSON.parse(x.responseText); if(j.now) SH.off=j.now-Date.now();
       var m=shMerge({sel:SH.sel,tomb:SH.tomb,custom:SH.custom},j);
+      var more=shSig(m)!==shSig(j); // le téléphone/la tablette a des changements que le serveur n'a pas encore
       SH.sel=m.sel;SH.tomb=m.tomb;SH.custom=m.custom;
       try{localStorage.setItem('dbc',JSON.stringify(m));}catch(e){}
+      if(push) SH.pending=false;
+      if(!push&&more){SH.pending=true;clearTimeout(SH.timer);SH.timer=setTimeout(shSync,500);}
       end('ok');
     }catch(e){end('err');}
   };
   x.onerror=x.ontimeout=function(){end('err');};
-  x.send(JSON.stringify({sel:SH.sel,tomb:SH.tomb,custom:SH.custom}));
+  x.send(push?JSON.stringify({sel:SH.sel,tomb:SH.tomb,custom:SH.custom}):null);
 }
 function shCats(){
   var a=SHOP_CAT.slice();
@@ -1442,7 +1453,11 @@ function shopInit(){
       document.documentElement.className='mob '+t; renderShop();
     });
   }
-  setInterval(function(){if(!document.hidden) shSync();},(MOB||SH.open)?20000:60000);
+  setInterval(function(){ // lecture seule ; la tablette murale ne regarde que toutes les 5 min (20 s si l'écran Courses est ouvert)
+    if(document.hidden) return;
+    var every=(MOB||SH.open)?20000:300000;
+    if(Date.now()-(SH.last||0)>=every-1000) shSync();
+  },5000);
   document.addEventListener('visibilitychange',function(){if(!document.hidden) shSync();});
   setTimeout(shSync,800);
   document.getElementById('c-shop').addEventListener('click',openShop);
