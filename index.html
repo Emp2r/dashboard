@@ -487,20 +487,20 @@ html.mob.tl #sh-tabs [data-tab=tl],html.mob.ta #sh-tabs [data-tab=ta]{background
 .wrow b{flex:none;width:2.6rem;text-align:right;color:var(--t1);font-weight:500}
 
 /* ---- Animations ---- */
-@keyframes cin{from{opacity:0;transform:translate3d(0,1.3rem,0) scale(.965)}to{opacity:1;transform:none}}
-@keyframes ovin{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
 @keyframes cupd{from{opacity:.45;transform:translate3d(0,.35rem,0)}to{opacity:1;transform:none}}
-#app.enter>.card,#p2.enter>.card{animation:cin .6s cubic-bezier(.2,.8,.2,1) both}
-#app.enter>.card:nth-child(2),#p2.enter>.card:nth-child(2){animation-delay:.06s}
-#app.enter>.card:nth-child(3),#p2.enter>.card:nth-child(3){animation-delay:.12s}
-#app.enter>.card:nth-child(4),#p2.enter>.card:nth-child(4){animation-delay:.18s}
-#app.enter>.card:nth-child(5),#p2.enter>.card:nth-child(5){animation-delay:.24s}
-#app.enter>.card:nth-child(6),#p2.enter>.card:nth-child(6){animation-delay:.30s}
-#wk.on,#wx.on,#ed.on,#mn.on,#sh.on,#tm.on,#ia.on{animation:ovin .32s ease-out both}
-#wk.on .card,#wx.on .card,#ed.on .card,#mn.on .card,#sh.on .card,#tm.on .card,#ia.on .card{animation:cin .55s cubic-bezier(.2,.8,.2,1) both}
-#wk.on .card:nth-child(2),#wx.on .card:nth-child(2),#ed.on .card:nth-child(2),#mn.on .card:nth-child(2),#sh.on .card:nth-child(2),#tm.on .card:nth-child(2){animation-delay:.07s}
-#ed.on .card:nth-child(3),#mn.on .card:nth-child(3){animation-delay:.14s}
-#ed.on .card:nth-child(4){animation-delay:.21s}
+@keyframes cin2{from{opacity:0;transform:translate3d(0,1rem,0)}to{opacity:1;transform:none}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+#app.enter>.card>:not(canvas),#p2.enter>.card>:not(canvas){animation:cin2 .6s cubic-bezier(.2,.8,.2,1) backwards}
+#app.enter>.card:nth-child(2)>*,#p2.enter>.card:nth-child(2)>*{animation-delay:.07s}
+#app.enter>.card:nth-child(3)>*,#p2.enter>.card:nth-child(3)>*{animation-delay:.14s}
+#app.enter>.card:nth-child(4)>*,#p2.enter>.card:nth-child(4)>*{animation-delay:.21s}
+#app.enter>.card:nth-child(5)>*,#p2.enter>.card:nth-child(5)>*{animation-delay:.28s}
+#app.enter>.card:nth-child(6)>*,#p2.enter>.card:nth-child(6)>*{animation-delay:.35s}
+#wk.on .bg,#wx.on .bg,#ed.on .bg,#mn.on .bg,#sh.on .bg,#tm.on .bg,#ia.on .bg{animation:fadein .3s ease-out backwards}
+#wk.on .card>:not(canvas),#wx.on .card>:not(canvas),#ed.on .card>:not(canvas),#mn.on .card>:not(canvas),#sh.on .card>:not(canvas),#tm.on .card>:not(canvas),#ia.on .card>:not(canvas){animation:cin2 .5s cubic-bezier(.2,.8,.2,1) backwards}
+#wk.on .card:nth-child(2)>*,#wx.on .card:nth-child(2)>*,#ed.on .card:nth-child(2)>*,#mn.on .card:nth-child(2)>*,#sh.on .card:nth-child(2)>*,#tm.on .card:nth-child(2)>*{animation-delay:.07s}
+#ed.on .card:nth-child(3)>*,#mn.on .card:nth-child(3)>*{animation-delay:.14s}
+#ed.on .card:nth-child(4)>*{animation-delay:.21s}
 .upd>*{animation:cupd .6s cubic-bezier(.2,.8,.2,1) both}
 #c-clock,#c-w0,#c-w1,#e-card,#m-card,#c-shop,#c-ia{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
 #c-clock:active,#c-w0:active,#c-w1:active,#e-card:active,#m-card:active,#c-shop:active,#c-ia:active{transform:scale(.982)}
@@ -1358,5 +1358,4 @@ var SHOP_CAT=[
  ['Charcuterie','🥓',[['Jambon blanc','🍖'],['Jambon cru','🍖'],['Jambon de poulet','🍖'],['Rosette','🌭'],['Chorizo','🌭'],['Saucisson','🌭'],['Saucisse sèche','🌭'],['Coppa','🥓'],['Bacon','🥓'],['Lardons','🥓'],['Viande des Grisons','🥩'],['Cervelas','🌭'],['Plateau de charcuterie','🍽️']]],
  ['Crèmerie & œufs','🧀',[['Lait','🥛'],['Œufs','🥚'],['Œufs de caille','🥚'],['Beurre','🧈'],['Crème liquide','🥛'],['Yaourts nature','🥛'],['Skyr','🥛'],['Petits suisses','🥛'],['Fromage blanc','🥛'],['St Môret','🧀'],['Mozzarella','🧀'],['Burrata','🧀'],['Feta','🧀'],['Chèvre','🧀'],['Comté','🧀'],['Gruyère','🧀'],['Parmesan','🧀'],['Cheddar','🧀'],['Bleu','🧀'],['Fromage râpé','🧀'],['Fromage en tranches','🧀'],['Fromage à raclette','🧀'],['Fromage à burger','🧀'],['Cancoillotte','🧀'],['Plateau de fromages','🧀']]],
  ['Pain & petit-déj','🥐',[['Pain','🥖'],['Pain de mie','🍞'],['Pain de mie céréales','🍞'],['Pain burger','🍔'],['Pain au lait','🥐'],['Brioche','🥐'],['Briochettes','🥐'],['Pancakes','🥞'],['Blinis','🥞'],['Wraps','🌯'],['Pita','🥙'],['Céréales Trésor','🥣'],['Nutella','🍫'],['Confiture','🍓'],['Miel','🍯'],['Nesquik','🥛'],['Café moulu','☕'],['Café en grains','☕'],['Dosettes Senseo','☕'],['Thé','🍵'],['Infusion','🍵']]],
- ['Épicerie','🍝',[['Pâtes','🍝'],['Riz','🍚'],['Riz japonais','🍚'],['Semoule','🥣'],['Taboulé','🥗'],['Farine','🌾'],['Sucre','🥄'],['Sucre vanillé','🥄'],['Levure','🥄'],['Maïzena','🥄'],['Panure','🥖'],['Purée','🥔'],['Soupes','🍲'],['Gaspacho','🍅'],['Conserves','🥫'],['Ratatouille','🥫'],['Sauce tomate','🍅'],['Pesto','🌿'],['Olives noires','⚫'],['Achards de légumes','🥫'],['Tomates confites','🍅'],['Huile d’olive','🍶'],['Huile de tournesol','🍶'],['Vinaigre balsamique','🍶'],['Lait de coco','🥥'],['Cœurs de palmier','🥫'],['Pâte à pizza','🍕'],['Pâte feuilletée','🥧'],['Pâte brisée','🥧']]],
- ['Épices & sauces','🧂',[['Sel','🧂'],['Gros sel','🧂'],['Poivre','🧂'],['Poivre en grains','🧂'],['Origan','🌿'],['
+ ['Épicerie','🍝',[['Pâtes','🍝'],['Riz','🍚'],['Riz japonais','🍚'],['Semoule','🥣'],['Taboulé','🥗'],['Farine','🌾'],['Sucre','🥄'],['Sucre vanillé','🥄'],['Levure','🥄'],['Maïzena','🥄'],['Panure','🥖'],['Purée','🥔'],['Soupes','🍲'],['Gaspacho','🍅'],['Conserves','🥫'],['Ratatouille','🥫'],['Sauce tomate','🍅'],['Pesto','🌿'],['Olives noires','⚫'],['Achards de légumes','🥫'],['Tomates confites','🍅'],['Huile d’olive','🍶'],['Huile de tournesol','🍶'],['Vinaigre balsamique','🍶'],['Lait de coco','🥥'],['Cœurs de palmier','🥫'],['Pâte à pizza','🍕'],['Pâte feuill
