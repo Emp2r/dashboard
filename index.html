@@ -1804,40 +1804,61 @@ function jget(params){
 }
 function pageVisible(n){return window.curPage===n&&!document.hidden;}
 
-/* Spotify */
-var SP={now:null,t:0,err:'',devs:[],dvOpen:false,loading:true,busy:false,timer:0};
-function spDev(){return SP.now&&SP.now.device?SP.now.device.name:'';}
+/* Spotify + Sonos : on lit les deux sources, on pilote la Sonos par l'API Sonos (Spotify bloque les commandes sur Sonos) */
+var SP={sp:null,sn:null,snOff:false,snAt:0,now:null,t:0,err:'',dvOpen:false,loading:true,busy:false};
+function spPick(){
+  var sp=SP.sp, sn=SP.sn, n=null, T=Date.now();
+  var spOk=sp&&!sp.idle, snOk=sn&&!sn.idle;
+  if(spOk&&sp.playing&&!(sp.device&&sp.device.restricted)) n={src:'spotify',d:sp};
+  else if(snOk) n={src:'sonos',d:sn};
+  else if(spOk) n={src:(sp.device&&sp.device.restricted&&sn)?'sonos':'spotify',d:sp};
+  if(!n){SP.now=null;return;}
+  var d=n.d;
+  SP.now={src:n.src,playing:!!d.playing,title:d.title,artist:d.artist,album:d.album,art:d.art||(sp&&sp.art)||'',progress:d.progress||0,duration:d.duration||0,
+    dev:n.src==='sonos'&&sn&&sn.group?sn.group.name:(sp&&sp.device?sp.device.name:''),group:sn&&sn.group?sn.group.id:''};
+  SP.t=T;
+}
+function spDev(){return SP.now?SP.now.dev:'';}
+function spSrc(){return SP.now&&SP.now.src==='sonos'?'sonos':'spotify';}
+function spCall(a,extra){
+  var n=SP.now, so=n?n.src==='sonos':false;
+  if(!n&&SP.sn&&SP.sn.group&&!SP.snOff) so=true;
+  return 'data='+(so?'sonos&group='+encodeURIComponent((n&&n.group)||(SP.sn&&SP.sn.group&&SP.sn.group.id)||''):'spot')+'&a='+a+(extra||'');
+}
 function renderSp(){
   var n=SP.now, h;
-  if(n&&!n.idle){
+  if(n){
     h='<div class="mbg" style="background-image:url('+esc(n.art)+')"></div><div class="mshade"></div>'+
       '<div class="label"><span>Spotify</span><span class="r">'+esc(spDev())+'</span></div>'+
-      '<div class="mb"><div class="mart" style="background-image:url('+esc(n.art)+')"></div><div class="mr">'+
+      '<div class="mb"><div class="mart" data-sp="app" style="background-image:url('+esc(n.art)+')"></div><div class="mr">'+
       '<div class="mti">'+esc(n.title)+'</div><div class="mar">'+esc(n.artist)+(n.album?' · '+esc(n.album):'')+'</div>'+
       '<div class="mbar" data-sp="seek"><i id="sp-f"></i></div><div class="mtm"><span id="sp-c">0:00</span><span>'+mTime(n.duration)+'</span></div>'+
       '<div class="mc"><button type="button" data-sp="prev">'+IC.prev+'</button><button type="button" class="big" data-sp="toggle">'+(n.playing?IC.pause:IC.play)+'</button><button type="button" data-sp="next">'+IC.next+'</button>'+
-      '<button type="button" class="chip" data-sp="dev">'+(spDev()?'♪ '+esc(spDev()):'Appareil')+'</button></div>'+
+      '<button type="button" class="chip" data-sp="dev">♪ Choisir</button></div>'+
       (SP.err?'<div class="merr">'+esc(SP.err)+'</div>':'')+'</div></div>';
   }else{
     h='<div class="label"><span>Spotify</span><span class="r"></span></div><div class="mid">'+
-      (SP.loading?'<div>Connexion à Spotify…</div>':'<div>'+(SP.err?esc(SP.err):'Rien en cours de lecture')+'</div><button type="button" data-sp="dev">Choisir un appareil (Sonos…)</button>')+'</div>';
+      (SP.loading?'<div>Connexion à Spotify…</div>':'<div>'+(SP.err?esc(SP.err):'Rien en cours de lecture')+'</div><button type="button" data-sp="dev">Choisir une musique</button><button type="button" data-sp="app">Ouvrir Spotify</button>')+'</div>';
   }
   put('c-spot',h); spTick();
 }
 function spTick(){
   var n=SP.now, f=document.getElementById('sp-f'), c=document.getElementById('sp-c');
-  if(!n||n.idle||!f) return;
-  var p=n.progress+(n.playing?Date.now()-SP.t:0); if(p>n.duration) p=n.duration;
+  if(!n||!f) return;
+  var p=n.progress+(n.playing?Date.now()-SP.t:0); if(n.duration&&p>n.duration) p=n.duration;
   f.style.width=(n.duration?Math.min(100,p/n.duration*100):0)+'%'; c.textContent=mTime(p);
 }
 function spPoll(){
   if(MOB||!CONFIG.proxy) return;
-  jget('data=spot&a=now').then(function(j){
-    SP.loading=false;
-    if(j.error){SP.err=j.error;SP.now=null;}
-    else{SP.err='';SP.now=j;SP.t=Date.now();}
-    renderSp();
-  }).catch(function(){SP.loading=false;SP.err='Connexion impossible';renderSp();});
+  var pend=2, errSp='';
+  function done(){ if(--pend) return; SP.loading=false; spPick(); SP.err=SP.now?'':errSp; renderSp(); }
+  jget('data=spot&a=now').then(function(j){ if(j.error){errSp=j.error;SP.sp=null;} else SP.sp=j; done(); }).catch(function(){errSp='Connexion impossible';done();});
+  if(SP.snOff&&Date.now()-SP.snAt<600000){ SP.sn=null; done(); return; }
+  jget('data=sonos&a=now').then(function(j){
+    if(j.error){ SP.sn=null; if(/non configur|non connect/i.test(j.error)){SP.snOff=true;SP.snAt=Date.now();} }
+    else { SP.sn=j; SP.snOff=false; }
+    done();
+  }).catch(function(){done();});
 }
 function spLoop(){
   var vis=pageVisible(2)||SP.dvOpen;
@@ -1846,29 +1867,46 @@ function spLoop(){
 }
 function spCmd(a,extra){
   if(SP.busy) return; SP.busy=true;
-  jget('data=spot&a='+a+(extra||'')).then(function(j){
+  jget(spCall(a,extra)).then(function(j){
     SP.busy=false;
     if(j.error){SP.err=j.error;renderSp();return;}
-    SP.err=''; setTimeout(spPoll,a==='next'||a==='prev'||a==='transfer'?900:400);
+    SP.err=''; setTimeout(spPoll,a==='next'||a==='prev'?1200:500);
   }).catch(function(){SP.busy=false;SP.err='Connexion impossible';renderSp();});
 }
 function spToggle(){
-  var n=SP.now; if(!n||n.idle) return;
+  var n=SP.now; if(!n) return;
   n.progress+=n.playing?Date.now()-SP.t:0; SP.t=Date.now(); n.playing=!n.playing; renderSp();
   spCmd(n.playing?'play':'pause');
 }
+function spOpenApp(){
+  try{ if(window.fully&&fully.startApplication){fully.startApplication('com.spotify.music');return;} }catch(e){}
+  location.href='intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.spotify.music;end';
+}
 function spDevices(){
   SP.dvOpen=true; document.getElementById('dv').className='on';
-  put('dv-in','<h3>Écouter sur…</h3><div class="iamsg iadots">Recherche des appareils<span>.</span><span>.</span><span>.</span></div>');
-  jget('data=spot&a=devices').then(function(j){
-    if(!SP.dvOpen) return;
-    if(j.error){put('dv-in','<h3>Écouter sur…</h3><div class="iamsg err">'+esc(j.error)+'</div>');return;}
-    var cur=SP.now&&SP.now.device?SP.now.device.id:'';
-    var rows=(j.devices||[]).map(function(d){
-      return '<button type="button" class="dvi'+((d.active||d.id===cur)?' on':'')+'" data-id="'+esc(d.id)+'"><span style="font-size:1.8rem">'+(d.type==='Smartphone'?'📱':d.type==='Computer'?'💻':d.type==='TV'?'📺':'🔊')+'</span><span>'+esc(d.name)+'<small>'+esc(d.type)+((d.active||d.id===cur)?' · en cours':'')+'</small></span></button>';
-    }).join('');
-    put('dv-in','<h3>Écouter sur…</h3>'+(rows||'<div class="iamsg">Aucun appareil trouvé.<br><small>Ouvre Spotify sur le téléphone ou lance une musique sur Sonos une première fois.</small></div>')+'<button type="button" class="mbtn" data-id="" style="margin-top:.6rem;width:100%">Fermer</button>');
-  }).catch(function(){put('dv-in','<h3>Écouter sur…</h3><div class="iamsg err">Connexion impossible.</div><button type="button" class="mbtn" data-id="" style="width:100%">Fermer</button>');});
+  var T='<h3>Choisir une musique</h3>';
+  put('dv-in',T+'<div class="iamsg iadots">Chargement<span>.</span><span>.</span><span>.</span></div>');
+  var favs=null, devs=null, pend=2, derr='';
+  function show(){
+    if(--pend||!SP.dvOpen) return;
+    var h='';
+    if(favs&&favs.length){
+      h+='<h3>Sur la Sonos'+(SP.sn&&SP.sn.group?' ('+esc(SP.sn.group.name)+')':'')+'</h3>'+favs.map(function(f){
+        return '<button type="button" class="dvi" data-fav="'+esc(f.id)+'">'+(f.art?'<img src="'+esc(f.art)+'" alt="" style="width:3.2rem;height:3.2rem;border-radius:.6rem;object-fit:cover">':'<span style="font-size:1.8rem">🔊</span>')+'<span>'+esc(f.name)+'<small>'+esc(f.service||'Favori Sonos')+'</small></span></button>';
+      }).join('');
+    }else if(!SP.snOff){ h+='<div class="iamsg" style="font-size:1rem;padding:.6rem 0">Aucun favori Sonos. Ajoutes-en dans l’appli Sonos (… > Ajouter aux favoris Sonos).</div>'; }
+    if(devs&&devs.length){
+      h+='<h3>Autres appareils Spotify</h3>'+devs.filter(function(d){return true;}).map(function(d){
+        return '<button type="button" class="dvi'+(d.active?' on':'')+'" data-id="'+esc(d.id)+'"><span style="font-size:1.8rem">'+(d.type==='Smartphone'?'📱':d.type==='Computer'?'💻':d.type==='TV'?'📺':'🔊')+'</span><span>'+esc(d.name)+'<small>'+esc(d.type)+(d.active?' · en cours':'')+'</small></span></button>';
+      }).join('');
+    }
+    if(derr&&!h) h='<div class="iamsg err">'+esc(derr)+'</div>';
+    h+='<button type="button" class="dvi" data-app="1"><span style="font-size:1.8rem">🎵</span><span>Ouvrir l’appli Spotify<small>Pour parcourir tout ton compte</small></span></button>';
+    h+='<button type="button" class="mbtn" data-id="" style="margin-top:.4rem;width:100%">Fermer</button>';
+    put('dv-in',T+h);
+  }
+  jget('data=sonos&a=favorites').then(function(j){ if(!j.error) favs=j.items||[]; show(); }).catch(function(){show();});
+  jget('data=spot&a=devices').then(function(j){ if(j.error) derr=j.error; else devs=j.devices||[]; show(); }).catch(function(){derr='Connexion impossible';show();});
 }
 function spCloseDv(){SP.dvOpen=false;document.getElementById('dv').className='';}
 function spInit(){
@@ -1879,6 +1917,7 @@ function spInit(){
     if(a==='toggle') spToggle();
     else if(a==='next'||a==='prev') spCmd(a);
     else if(a==='dev') spDevices();
+    else if(a==='app') spOpenApp();
     else if(a==='seek'&&SP.now&&SP.now.duration){
       var r=t.getBoundingClientRect(), ms=Math.round(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*SP.now.duration);
       SP.now.progress=ms; SP.t=Date.now(); spTick(); spCmd('seek','&ms='+ms);
@@ -1887,9 +1926,21 @@ function spInit(){
   document.getElementById('dv').addEventListener('click',function(e){
     var t=e.target;
     if(t.id==='dv'){spCloseDv();return;}
-    while(t&&t!==this&&!(t.getAttribute&&t.getAttribute('data-id')!==null)) t=t.parentNode;
-    if(!t||t===this) return; var id=t.getAttribute('data-id');
-    spCloseDv(); if(id) spCmd('transfer','&device='+encodeURIComponent(id));
+    while(t&&t!==this&&!(t.getAttribute&&(t.getAttribute('data-id')!==null||t.getAttribute('data-fav')||t.getAttribute('data-app')))) t=t.parentNode;
+    if(!t||t===this) return;
+    if(t.getAttribute('data-app')){spCloseDv();spOpenApp();return;}
+    if(t.getAttribute('data-fav')){
+      var gid=SP.sn&&SP.sn.group?SP.sn.group.id:''; spCloseDv();
+      if(SP.busy) return; SP.busy=true;
+      jget('data=sonos&group='+encodeURIComponent(gid)+'&a=playfav&fav='+encodeURIComponent(t.getAttribute('data-fav'))).then(function(j){
+        SP.busy=false; if(j.error){SP.err=j.error;renderSp();return;} SP.err=''; setTimeout(spPoll,1500);
+      }).catch(function(){SP.busy=false;SP.err='Connexion impossible';renderSp();});
+      return;
+    }
+    var id=t.getAttribute('data-id'); spCloseDv();
+    if(id){ if(SP.busy) return; SP.busy=true;
+      jget('data=spot&a=transfer&device='+encodeURIComponent(id)).then(function(j){SP.busy=false;if(j.error){SP.err=j.error;renderSp();return;}SP.err='';setTimeout(spPoll,900);}).catch(function(){SP.busy=false;});
+    }
   });
   setInterval(spTick,1000);
   renderSp(); setTimeout(spLoop,1500);
