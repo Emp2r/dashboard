@@ -1879,8 +1879,14 @@ function spToggle(){
   spCmd(n.playing?'play':'pause');
 }
 function spOpenApp(){
-  try{ if(window.fully&&fully.startApplication){fully.startApplication('com.spotify.music');return;} }catch(e){}
-  location.href='intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.spotify.music;end';
+  var URI='intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.spotify.music;end';
+  var f=window.fully, did=false;
+  try{ if(f&&typeof f.startApplication==='function'){ f.startApplication('com.spotify.music'); did=true; } }catch(e){}
+  try{ if(!did&&f&&typeof f.startIntent==='function'){ f.startIntent(URI); did=true; } }catch(e){}
+  if(did){ SP.err=''; return; }
+  SP.err=f?'Fully Kiosk bloque le lancement : vérifie la licence PLUS.':'Interface Fully Kiosk absente : active « Interface JavaScript » dans Paramètres web > Avancé, puis recharge.';
+  renderSp();
+  try{ location.href=URI; }catch(e){}
 }
 function spDevices(){
   SP.dvOpen=true; document.getElementById('dv').className='on';
