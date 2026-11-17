@@ -227,7 +227,7 @@ button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer
 /* Pages (glisser à droite / à gauche) */
 #pages{position:relative;z-index:1;display:flex;width:100vw;height:100vh;overflow:hidden;touch-action:pan-y;scrollbar-width:none}
 #pages::-webkit-scrollbar{display:none}
-#app,#p2,#p3{flex:0 0 100vw;width:100vw;scroll-snap-align:start;scroll-snap-stop:always}
+#app,#p2{flex:0 0 100vw;width:100vw;scroll-snap-align:start;scroll-snap-stop:always}
 .car{overscroll-behavior-x:contain}
 #pg{position:fixed;left:50%;bottom:.5rem;transform:translateX(-50%);z-index:6;display:flex;gap:.2rem;padding:.2rem .35rem;border-radius:2rem;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .pgd{display:block;width:1.9rem;height:1.5rem;padding:.4rem .6rem;background:#6b6b70;background-clip:content-box;border-radius:50%}
@@ -435,62 +435,6 @@ html.mob.tl #sh-tabs [data-tab=tl],html.mob.ta #sh-tabs [data-tab=ta]{background
   background:rgba(255,255,255,.14);border:1px solid var(--line);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
 #ia-back span{font-size:1.6rem;line-height:0;margin-right:.35rem;position:relative;top:.1rem}
 
-/* Page 3 : Média (Spotify + YouTube), un quart d'écran chacune */
-#p3{height:100vh;padding:1.1rem 1.1rem 2.7rem;display:grid;gap:1rem;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;box-sizing:border-box}
-#c-spot{grid-column:1;grid-row:1}
-#c-yt{grid-column:2;grid-row:1}
-#c-spot,#c-yt{position:relative;overflow:hidden;padding:1.1rem 1.3rem}
-.mbg{position:absolute;left:-10%;top:-10%;width:120%;height:120%;background-size:cover;background-position:center;-webkit-filter:blur(26px) saturate(1.3);filter:blur(26px) saturate(1.3);opacity:.5;z-index:0}
-.mshade{position:absolute;left:0;top:0;right:0;bottom:0;background:linear-gradient(160deg,rgba(0,0,0,.25),rgba(0,0,0,.55));z-index:0}
-#c-spot .label,#c-yt .label,.mb{position:relative;z-index:1}
-.mb{flex:1;min-height:0;display:flex;gap:1.1rem;align-items:stretch;margin-top:.5rem}
-.mart{flex:none;height:100%;aspect-ratio:1/1;max-height:12rem;border-radius:.9rem;background:rgba(255,255,255,.1) center/cover no-repeat;box-shadow:0 .5rem 1.4rem rgba(0,0,0,.5);align-self:center}
-.myt{aspect-ratio:16/9;height:auto;width:42%;max-height:none;align-self:flex-start;margin-top:.2rem}
-.mr{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
-.mti{font-size:1.45rem;font-weight:700;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.mar{font-size:1.02rem;color:var(--t2);margin-top:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mbar{height:.45rem;border-radius:.3rem;background:rgba(255,255,255,.22);margin:.9rem 0 .3rem;position:relative}
-.mbar i{display:block;height:100%;width:0;border-radius:.3rem;background:#fff}
-.mbar:before{content:"";position:absolute;left:0;right:0;top:-.8rem;bottom:-.8rem}
-.mtm{display:flex;justify-content:space-between;font-size:.8rem;color:var(--t2);font-feature-settings:"tnum" 1}
-.mc{display:flex;align-items:center;gap:.7rem;margin-top:.5rem}
-.mc button{width:3rem;height:3rem;border-radius:50%;background:transparent;color:#fff;padding:.6rem}
-.mc button svg{width:100%;height:100%;fill:currentColor;display:block}
-.mc button.big{width:3.6rem;height:3.6rem;background:#fff;color:#000;padding:.75rem}
-.mc button:active{opacity:.6}
-.mc .chip{margin-left:auto;width:auto;height:auto;border-radius:2rem;padding:.55rem 1rem;background:rgba(255,255,255,.16);font-size:.9rem;font-weight:600;white-space:nowrap;max-width:9rem;overflow:hidden;text-overflow:ellipsis}
-.mid{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:.9rem;position:relative;z-index:1;color:var(--t2);font-size:1.1rem}
-.mid button,.mbtn{padding:.8rem 1.5rem;border-radius:2rem;background:rgba(255,255,255,.18);color:#fff;font-size:1.05rem;font-weight:600}
-.mid button:active,.mbtn:active{background:rgba(255,255,255,.3)}
-.merr{color:#ff9f95;font-size:.85rem;margin-top:.4rem}
-#dv,#yt{position:fixed;left:0;top:0;right:0;bottom:0;z-index:100;display:none}
-#dv.on,#yt.on{display:block}
-#dv{background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
-#dv-in{position:absolute;left:50%;top:50%;width:34rem;max-width:92vw;max-height:80vh;overflow-y:auto;transform:translate(-50%,-50%);padding:1.4rem}
-#dv-in h3{margin:0 0 1rem;font-size:1.5rem}
-.dvi{display:flex;align-items:center;gap:1rem;width:100%;text-align:left;padding:1rem 1.2rem;margin-bottom:.6rem;border-radius:1.2rem;background:rgba(255,255,255,.1);color:#fff;font-size:1.25rem}
-.dvi.on{background:rgba(10,132,255,.4)}
-.dvi small{display:block;font-size:.85rem;color:var(--t2)}
-.dvi:active{background:rgba(255,255,255,.25)}
-#yt{background:#000}
-#yt .bg{position:absolute}
-#yt-in{position:relative;z-index:1;height:100%;padding:1rem 1.2rem 4.6rem;box-sizing:border-box;display:flex;flex-direction:column;gap:.9rem}
-#yt-bar{display:flex;gap:.7rem;flex:none}
-#yt-q{flex:1;min-width:0;padding:1rem 1.4rem;border-radius:2rem;border:1px solid var(--line);background:rgba(255,255,255,.12);color:var(--t1);font-size:1.35rem;font-family:inherit;outline:none;-webkit-appearance:none}
-#yt-q:focus{border-color:#ff453a}
-#yt-go{padding:0 2rem;border-radius:2rem;background:#ff453a;color:#fff;font-size:1.25rem;font-weight:700}
-#yt-go[disabled]{opacity:.4}
-#yt-card{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.ytg{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
-.yti{display:flex;gap:.9rem;align-items:center;text-align:left;padding:.6rem;border-radius:1.1rem;background:rgba(255,255,255,.08);color:#fff}
-.yti:active{background:rgba(255,255,255,.22)}
-.yti img{width:9.5rem;aspect-ratio:16/9;border-radius:.6rem;flex:none;object-fit:cover;background:#222}
-.yti b{display:block;font-size:1.05rem;line-height:1.25;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.yti small{color:var(--t2);font-size:.85rem}
-#yt-back{position:absolute;right:1.4rem;bottom:1.2rem;z-index:5;padding:.8rem 1.7rem .8rem 1.2rem;border-radius:2rem;font-size:1.1rem;font-weight:600;
-  background:rgba(255,255,255,.14);border:1px solid var(--line);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
-#yt-back span{font-size:1.6rem;line-height:0;margin-right:.35rem;position:relative;top:.1rem}
-
 /* Citation du jour */
 #c-quote{justify-content:space-between;background:linear-gradient(160deg,rgba(255,159,10,.16),rgba(191,90,242,.12) 70%,rgba(255,255,255,.03))}
 .qbody{flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;min-height:0;animation:qin 1.2s ease both}
@@ -570,18 +514,10 @@ html.mob.tl #sh-tabs [data-tab=tl],html.mob.ta #sh-tabs [data-tab=ta]{background
   <section class="card" id="c-edt"></section>
   <section class="card" id="c-ia"></section>
 </div>
-<div id="p3">
-  <section class="card" id="c-spot"></section>
-  <section class="card" id="c-yt"></section>
 </div>
-</div>
-<div id="pg"><i class="pgd on"></i><i class="pgd"></i><i class="pgd"></i></div>
+<div id="pg"><i class="pgd on"></i><i class="pgd"></i></div>
 
 <div id="wx"><div class="bg"></div><canvas class="fx"></canvas><div id="wx-in"></div><button id="wx-back" type="button"><span>‹</span>Retour</button></div>
-
-<div id="dv"><section class="card" id="dv-in"></section></div>
-
-<div id="yt"><div class="bg"></div><div id="yt-in"><div id="yt-bar"><input id="yt-q" type="text" enterkeyhint="search" autocomplete="off" autocorrect="off" placeholder="Colle un lien YouTube ou cherche une vidéo…"><button id="yt-go" type="button">Envoyer</button></div><section class="card" id="yt-card"></section></div><button id="yt-back" type="button"><span>‹</span>Retour</button></div>
 
 <div id="ia"><div class="bg"></div><div id="ia-in"><div id="ia-bar"><input id="ia-q" type="text" enterkeyhint="send" autocomplete="off" autocorrect="off" placeholder="Pose ta question ou cherche une recette…"><button id="ia-go" type="button">Envoyer</button><button id="ia-new" type="button" style="display:none">Nouvelle<br>conversation</button></div><section class="card" id="ia-card"></section></div><button id="ia-back" type="button"><span>‹</span>Retour</button></div>
 
@@ -754,9 +690,8 @@ function wkInit(){
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeWeek();});
   ['touchstart','mousedown','keydown','scroll'].forEach(function(ev){document.addEventListener(ev,function(){lastTouch=Date.now();},true);});
   setInterval(function(){          // retour automatique si personne ne touche l'écran
-    var idle=Date.now()-lastTouch, car=document.getElementById('car'), any=wk.open||wx.open||edf.open||mn.open||SH.open||TM.open||IA.open||YTV.open||SP.dvOpen;
+    var idle=Date.now()-lastTouch, car=document.getElementById('car'), any=wk.open||wx.open||edf.open||mn.open||SH.open||TM.open||IA.open;
     if(IA.open&&idle>600000) closeIa();
-    if((YTV.open||SP.dvOpen)&&idle>90000){closeYt();spCloseDv();}
     if((wk.open||wx.open||edf.open||mn.open||SH.open||TM.open)&&idle>90000){closeWeek();closeWx();closeEd();closeMn();closeShop();closeTm();}
     else if(!any&&idle>120000&&car&&car.scrollLeft>5) car.scrollTo({left:0,behavior:'smooth'});
     if(!any&&idle>180000&&window.curPage>0&&window.goPage) window.goPage(0);
@@ -1787,289 +1722,6 @@ function iaInit(){
   document.getElementById('ia-new').addEventListener('click',function(){IA.tok++;IA.busy=false;IA.msgs=[];IA.err='';renderIa(true);});
 }
 
-/* ---- Page 3 : Spotify et YouTube ---- */
-var IC={
-  play:'<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
-  pause:'<svg viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>',
-  next:'<svg viewBox="0 0 24 24"><path d="M6 6l8.5 6L6 18zM16 6h2v12h-2z"/></svg>',
-  prev:'<svg viewBox="0 0 24 24"><path d="M18 6l-8.5 6L18 18zM6 6h2v12H6z"/></svg>'
-};
-function mTime(ms){var s=Math.max(0,Math.floor(ms/1000));return Math.floor(s/60)+':'+pad(s%60);}
-function jget(params){
-  return new Promise(function(res,rej){
-    var t=setTimeout(function(){rej(new Error('timeout'));},15000);
-    fetch(api(params+'&_='+Date.now())).then(function(r){return r.json().catch(function(){return {error:'Réponse invalide (HTTP '+r.status+')'};});})
-      .then(function(j){clearTimeout(t);res(j);}).catch(function(e){clearTimeout(t);rej(e);});
-  });
-}
-function pageVisible(n){return window.curPage===n&&!document.hidden;}
-
-/* Spotify + Sonos : on lit les deux sources, on pilote la Sonos par l'API Sonos (Spotify bloque les commandes sur Sonos) */
-var SP={sp:null,sn:null,snOff:false,snAt:0,now:null,t:0,err:'',dvOpen:false,loading:true,busy:false};
-function spPick(){
-  var sp=SP.sp, sn=SP.sn, n=null, T=Date.now();
-  var spOk=sp&&!sp.idle, snOk=sn&&!sn.idle;
-  if(spOk&&sp.playing&&!(sp.device&&sp.device.restricted)) n={src:'spotify',d:sp};
-  else if(snOk) n={src:'sonos',d:sn};
-  else if(spOk) n={src:(sp.device&&sp.device.restricted&&sn)?'sonos':'spotify',d:sp};
-  if(!n){SP.now=null;return;}
-  var d=n.d;
-  SP.now={src:n.src,playing:!!d.playing,title:d.title,artist:d.artist,album:d.album,art:d.art||(sp&&sp.art)||'',progress:d.progress||0,duration:d.duration||0,
-    dev:n.src==='sonos'&&sn&&sn.group?sn.group.name:(sp&&sp.device?sp.device.name:''),group:sn&&sn.group?sn.group.id:''};
-  SP.t=T;
-}
-function spDev(){return SP.now?SP.now.dev:'';}
-function spSrc(){return SP.now&&SP.now.src==='sonos'?'sonos':'spotify';}
-function spCall(a,extra){
-  var n=SP.now, so=n?n.src==='sonos':false;
-  if(!n&&SP.sn&&SP.sn.group&&!SP.snOff) so=true;
-  return 'data='+(so?'sonos&group='+encodeURIComponent((n&&n.group)||(SP.sn&&SP.sn.group&&SP.sn.group.id)||''):'spot')+'&a='+a+(extra||'');
-}
-function renderSp(){
-  var n=SP.now, h;
-  if(n){
-    h='<div class="mbg" style="background-image:url('+esc(n.art)+')"></div><div class="mshade"></div>'+
-      '<div class="label"><span>Spotify</span><span class="r">'+esc(spDev())+'</span></div>'+
-      '<div class="mb"><div class="mart" data-sp="app" style="background-image:url('+esc(n.art)+')"></div><div class="mr">'+
-      '<div class="mti">'+esc(n.title)+'</div><div class="mar">'+esc(n.artist)+(n.album?' · '+esc(n.album):'')+'</div>'+
-      '<div class="mbar" data-sp="seek"><i id="sp-f"></i></div><div class="mtm"><span id="sp-c">0:00</span><span>'+mTime(n.duration)+'</span></div>'+
-      '<div class="mc"><button type="button" data-sp="prev">'+IC.prev+'</button><button type="button" class="big" data-sp="toggle">'+(n.playing?IC.pause:IC.play)+'</button><button type="button" data-sp="next">'+IC.next+'</button>'+
-      '<button type="button" class="chip" data-sp="dev">♪ Choisir</button></div>'+
-      (SP.err?'<div class="merr">'+esc(SP.err)+'</div>':'')+'</div></div>';
-  }else{
-    h='<div class="label"><span>Spotify</span><span class="r"></span></div><div class="mid">'+
-      (SP.loading?'<div>Connexion à Spotify…</div>':'<div>'+(SP.err?esc(SP.err):'Rien en cours de lecture')+'</div><button type="button" data-sp="dev">Choisir une musique</button><button type="button" data-sp="app">Ouvrir Spotify</button>')+'</div>';
-  }
-  put('c-spot',h); spTick();
-}
-function spTick(){
-  var n=SP.now, f=document.getElementById('sp-f'), c=document.getElementById('sp-c');
-  if(!n||!f) return;
-  var p=n.progress+(n.playing?Date.now()-SP.t:0); if(n.duration&&p>n.duration) p=n.duration;
-  f.style.width=(n.duration?Math.min(100,p/n.duration*100):0)+'%'; c.textContent=mTime(p);
-}
-function spPoll(){
-  if(MOB||!CONFIG.proxy) return;
-  var pend=2, errSp='';
-  function done(){ if(--pend) return; SP.loading=false; spPick(); SP.err=SP.now?'':errSp; renderSp(); }
-  jget('data=spot&a=now').then(function(j){ if(j.error){errSp=j.error;SP.sp=null;} else SP.sp=j; done(); }).catch(function(){errSp='Connexion impossible';done();});
-  if(SP.snOff&&Date.now()-SP.snAt<600000){ SP.sn=null; done(); return; }
-  jget('data=sonos&a=now').then(function(j){
-    if(j.error){ SP.sn=null; if(/non configur|non connect/i.test(j.error)){SP.snOff=true;SP.snAt=Date.now();} }
-    else { SP.sn=j; SP.snOff=false; }
-    done();
-  }).catch(function(){done();});
-}
-function spLoop(){
-  var vis=pageVisible(2)||SP.dvOpen;
-  if(vis&&!SP.busy) spPoll();
-  setTimeout(spLoop,vis?5000:30000);
-}
-function spCmd(a,extra){
-  if(SP.busy) return; SP.busy=true;
-  jget(spCall(a,extra)).then(function(j){
-    SP.busy=false;
-    if(j.error){SP.err=j.error;renderSp();return;}
-    SP.err=''; setTimeout(spPoll,a==='next'||a==='prev'?1200:500);
-  }).catch(function(){SP.busy=false;SP.err='Connexion impossible';renderSp();});
-}
-function spToggle(){
-  var n=SP.now; if(!n) return;
-  n.progress+=n.playing?Date.now()-SP.t:0; SP.t=Date.now(); n.playing=!n.playing; renderSp();
-  spCmd(n.playing?'play':'pause');
-}
-function spOpenApp(){
-  var URI='intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.spotify.music;end';
-  var f=window.fully, did=false;
-  try{ if(f&&typeof f.startApplication==='function'){ f.startApplication('com.spotify.music'); did=true; } }catch(e){}
-  try{ if(!did&&f&&typeof f.startIntent==='function'){ f.startIntent(URI); did=true; } }catch(e){}
-  if(did){ SP.err=''; return; }
-  SP.err=f?'Fully Kiosk bloque le lancement : vérifie la licence PLUS.':'Interface Fully Kiosk absente : active « Interface JavaScript » dans Paramètres web > Avancé, puis recharge.';
-  renderSp();
-  try{ location.href=URI; }catch(e){}
-}
-function spDevices(){
-  SP.dvOpen=true; document.getElementById('dv').className='on';
-  var T='<h3>Choisir une musique</h3>';
-  put('dv-in',T+'<div class="iamsg iadots">Chargement<span>.</span><span>.</span><span>.</span></div>');
-  var favs=null, devs=null, pend=2, derr='';
-  function show(){
-    if(--pend||!SP.dvOpen) return;
-    var h='';
-    if(favs&&favs.length){
-      h+='<h3>Sur la Sonos'+(SP.sn&&SP.sn.group?' ('+esc(SP.sn.group.name)+')':'')+'</h3>'+favs.map(function(f){
-        return '<button type="button" class="dvi" data-fav="'+esc(f.id)+'">'+(f.art?'<img src="'+esc(f.art)+'" alt="" style="width:3.2rem;height:3.2rem;border-radius:.6rem;object-fit:cover">':'<span style="font-size:1.8rem">🔊</span>')+'<span>'+esc(f.name)+'<small>'+esc(f.service||'Favori Sonos')+'</small></span></button>';
-      }).join('');
-    }else if(!SP.snOff){ h+='<div class="iamsg" style="font-size:1rem;padding:.6rem 0">Aucun favori Sonos. Ajoutes-en dans l’appli Sonos (… > Ajouter aux favoris Sonos).</div>'; }
-    if(devs&&devs.length){
-      h+='<h3>Autres appareils Spotify</h3>'+devs.filter(function(d){return true;}).map(function(d){
-        return '<button type="button" class="dvi'+(d.active?' on':'')+'" data-id="'+esc(d.id)+'"><span style="font-size:1.8rem">'+(d.type==='Smartphone'?'📱':d.type==='Computer'?'💻':d.type==='TV'?'📺':'🔊')+'</span><span>'+esc(d.name)+'<small>'+esc(d.type)+(d.active?' · en cours':'')+'</small></span></button>';
-      }).join('');
-    }
-    if(derr&&!h) h='<div class="iamsg err">'+esc(derr)+'</div>';
-    h+='<button type="button" class="dvi" data-app="1"><span style="font-size:1.8rem">🎵</span><span>Ouvrir l’appli Spotify<small>Pour parcourir tout ton compte</small></span></button>';
-    h+='<button type="button" class="mbtn" data-id="" style="margin-top:.4rem;width:100%">Fermer</button>';
-    put('dv-in',T+h);
-  }
-  jget('data=sonos&a=favorites').then(function(j){ if(!j.error) favs=j.items||[]; show(); }).catch(function(){show();});
-  jget('data=spot&a=devices').then(function(j){ if(j.error) derr=j.error; else devs=j.devices||[]; show(); }).catch(function(){derr='Connexion impossible';show();});
-}
-function spCloseDv(){SP.dvOpen=false;document.getElementById('dv').className='';}
-function spInit(){
-  if(MOB) return;
-  document.getElementById('c-spot').addEventListener('click',function(e){
-    var t=e.target; while(t&&t!==this&&!(t.getAttribute&&t.getAttribute('data-sp'))) t=t.parentNode;
-    if(!t||t===this) return; var a=t.getAttribute('data-sp');
-    if(a==='toggle') spToggle();
-    else if(a==='next'||a==='prev') spCmd(a);
-    else if(a==='dev') spDevices();
-    else if(a==='app') spOpenApp();
-    else if(a==='seek'&&SP.now&&SP.now.duration){
-      var r=t.getBoundingClientRect(), ms=Math.round(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*SP.now.duration);
-      SP.now.progress=ms; SP.t=Date.now(); spTick(); spCmd('seek','&ms='+ms);
-    }
-  });
-  document.getElementById('dv').addEventListener('click',function(e){
-    var t=e.target;
-    if(t.id==='dv'){spCloseDv();return;}
-    while(t&&t!==this&&!(t.getAttribute&&(t.getAttribute('data-id')!==null||t.getAttribute('data-fav')||t.getAttribute('data-app')))) t=t.parentNode;
-    if(!t||t===this) return;
-    if(t.getAttribute('data-app')){spCloseDv();spOpenApp();return;}
-    if(t.getAttribute('data-fav')){
-      var gid=SP.sn&&SP.sn.group?SP.sn.group.id:''; spCloseDv();
-      if(SP.busy) return; SP.busy=true;
-      jget('data=sonos&group='+encodeURIComponent(gid)+'&a=playfav&fav='+encodeURIComponent(t.getAttribute('data-fav'))).then(function(j){
-        SP.busy=false; if(j.error){SP.err=j.error;renderSp();return;} SP.err=''; setTimeout(spPoll,1500);
-      }).catch(function(){SP.busy=false;SP.err='Connexion impossible';renderSp();});
-      return;
-    }
-    var id=t.getAttribute('data-id'); spCloseDv();
-    if(id){ if(SP.busy) return; SP.busy=true;
-      jget('data=spot&a=transfer&device='+encodeURIComponent(id)).then(function(j){SP.busy=false;if(j.error){SP.err=j.error;renderSp();return;}SP.err='';setTimeout(spPoll,900);}).catch(function(){SP.busy=false;});
-    }
-  });
-  setInterval(spTick,1000);
-  renderSp(); setTimeout(spLoop,1500);
-}
-
-/* YouTube (sur la télé) */
-var YTV={paired:null,tv:'',search:false,vid:'',title:'',author:'',state:-1,time:0,t:0,err:'',open:false,busy:false,results:[],msg:'',pairing:false};
-try{var _y=JSON.parse(localStorage.getItem('dby')||'null');if(_y){YTV.vid=_y.vid||'';YTV.title=_y.title||'';YTV.author=_y.author||'';}}catch(e){}
-function ytSave(){try{localStorage.setItem('dby',JSON.stringify({vid:YTV.vid,title:YTV.title,author:YTV.author}));}catch(e){}}
-function ytThumb(id,q){return 'https://i.ytimg.com/vi/'+id+'/'+(q||'mqdefault')+'.jpg';}
-function ytId(x){x=String(x||'').replace(/^\s+|\s+$/g,'');var m=/(?:v=|youtu\.be\/|embed\/|shorts\/|live\/)([A-Za-z0-9_-]{11})/.exec(x);if(m)return m[1];return /^[A-Za-z0-9_-]{11}$/.test(x)?x:'';}
-function renderYt(){
-  var h, playing=YTV.state===1, have=!!YTV.vid;
-  if(YTV.paired===false){
-    h='<div class="label"><span>YouTube</span><span class="r"></span></div><div class="mid"><div>La télé n’est pas encore jumelée</div><button type="button" data-yt="open">Jumeler la télé</button></div>';
-  }else if(YTV.paired===null){
-    h='<div class="label"><span>YouTube</span><span class="r"></span></div><div class="mid"><div>'+(YTV.err?esc(YTV.err):'Connexion…')+'</div></div>';
-  }else if(!have){
-    h='<div class="label"><span>YouTube</span><span class="r">'+esc(YTV.tv)+'</span></div><div class="mid"><div>Rien sur la télé</div><button type="button" data-yt="open">Envoyer une vidéo vers la télé</button></div>';
-  }else{
-    h='<div class="mbg" style="background-image:url('+ytThumb(YTV.vid)+')"></div><div class="mshade"></div>'+
-      '<div class="label"><span>YouTube</span><span class="r">'+esc(YTV.tv)+(YTV.state===1?' · lecture':YTV.state===2?' · pause':'')+'</span></div>'+
-      '<div class="mb"><div class="mart myt" style="background-image:url('+ytThumb(YTV.vid)+')"></div><div class="mr">'+
-      '<div class="mti">'+esc(YTV.title||'Vidéo YouTube')+'</div><div class="mar">'+esc(YTV.author)+'</div>'+
-      '<div class="mc"><button type="button" data-yt="prev">'+IC.prev+'</button><button type="button" class="big" data-yt="toggle">'+(playing?IC.pause:IC.play)+'</button><button type="button" data-yt="next">'+IC.next+'</button></div>'+
-      '<div style="margin-top:.7rem"><button type="button" class="mbtn" data-yt="open">Envoyer une autre vidéo</button></div>'+
-      (YTV.err?'<div class="merr">'+esc(YTV.err)+'</div>':'')+'</div></div>';
-  }
-  put('c-yt',h);
-}
-function ytStatus(){
-  if(MOB||!CONFIG.proxy) return;
-  jget('data=yt&a=status').then(function(j){
-    if(j.error){YTV.err=j.error;YTV.paired=null;}
-    else{YTV.paired=!!j.paired;YTV.tv=j.name||'';YTV.search=!!j.search;YTV.err='';if(j.paired) ytState();}
-    renderYt(); if(YTV.open) renderYtOv();
-  }).catch(function(){YTV.err='Connexion impossible';renderYt();});
-}
-function ytState(){
-  if(YTV.busy||!YTV.paired) return;
-  jget('data=yt&a=state').then(function(j){
-    if(j.error){YTV.err=j.error;renderYt();return;}
-    YTV.err=''; YTV.state=j.state;
-    if(j.videoId&&j.videoId!==YTV.vid){YTV.vid=j.videoId;YTV.title=j.title||'';YTV.author=j.author||'';ytSave();}
-    else if(j.videoId&&j.title){YTV.title=j.title;YTV.author=j.author||YTV.author;}
-    renderYt();
-  }).catch(function(){});
-}
-function ytLoop(){ if(pageVisible(2)&&!YTV.open&&YTV.paired) ytState(); setTimeout(ytLoop,60000); }
-function ytCmd(a){
-  if(YTV.busy) return; YTV.busy=true;
-  if(a==='toggle'){a=YTV.state===1?'pause':'play'; YTV.state=a==='pause'?2:1; renderYt();}
-  jget('data=yt&a='+a).then(function(j){
-    YTV.busy=false;
-    if(j.error){YTV.err=j.error;renderYt();return;}
-    YTV.err=''; if(a==='next'||a==='prev') setTimeout(ytState,1500);
-  }).catch(function(){YTV.busy=false;YTV.err='Connexion impossible';renderYt();});
-}
-function ytPlay(id,title,channel){
-  if(YTV.busy) return; YTV.busy=true; YTV.msg='Envoi vers la télé…'; YTV.err=''; renderYtOv();
-  jget('data=yt&a=play_video&id='+encodeURIComponent(id)).then(function(j){
-    YTV.busy=false;
-    if(j.error){YTV.msg='';YTV.err=j.error;renderYtOv();return;}
-    YTV.vid=id; YTV.title=j.title||title||''; YTV.author=j.author||channel||''; YTV.state=1; YTV.err=''; ytSave(); renderYt();
-    YTV.msg='✓ Envoyé vers la télé'; renderYtOv(); setTimeout(closeYt,1100);
-  }).catch(function(){YTV.busy=false;YTV.msg='';YTV.err='Connexion impossible';renderYtOv();});
-}
-function renderYtOv(){
-  if(!YTV.open) return;
-  var h='', go=document.getElementById('yt-go'), q=document.getElementById('yt-q');
-  if(YTV.paired===false){
-    go.textContent='Jumeler'; q.placeholder='Code à 12 chiffres affiché sur la télé';
-    h='<div class="iamsg" style="text-align:left;font-size:1.25rem;line-height:1.6;color:var(--t1)"><b>Jumeler la télé (une seule fois)</b><br>1. Sur la télé, ouvre l’appli YouTube.<br>2. Va dans Paramètres, puis « Associer avec un code TV ».<br>3. Tape le code à 12 chiffres ci-dessus, puis touche Jumeler.</div>';
-  }else{
-    go.textContent=YTV.search?'Chercher':'Envoyer'; q.placeholder=YTV.search?'Colle un lien YouTube ou cherche une vidéo…':'Colle un lien YouTube pour l’envoyer…';
-    if(YTV.results.length) h='<div class="ytg">'+YTV.results.map(function(r,i){return '<button type="button" class="yti" data-i="'+i+'"><img src="'+ytThumb(r.id)+'" alt=""><span><b>'+esc(r.title)+'</b><small>'+esc(r.channel)+'</small></span></button>';}).join('')+'</div>';
-    else h='<div class="iamsg">'+(YTV.search?'Cherche une vidéo ou colle un lien YouTube.':'Colle un lien YouTube pour l’envoyer vers la télé.')+'</div>';
-  }
-  if(YTV.msg) h='<div class="iamsg" style="color:#30d158">'+esc(YTV.msg)+'</div>'+h;
-  if(YTV.err) h='<div class="iamsg err">'+esc(YTV.err)+'</div>'+h;
-  put('yt-card',h);
-  go.disabled=YTV.busy;
-}
-function openYt(){YTV.open=true;YTV.err='';YTV.msg='';YTV.results=[];document.getElementById('yt').className='on';document.getElementById('yt-q').value='';renderYtOv();try{document.getElementById('yt-q').focus();}catch(e){}}
-function closeYt(){YTV.open=false;document.getElementById('yt').className='';try{document.getElementById('yt-q').blur();}catch(e){}}
-function ytSubmit(){
-  var q=document.getElementById('yt-q'), v=q.value.replace(/^\s+|\s+$/g,''); if(!v||YTV.busy) return;
-  if(YTV.paired===false){
-    YTV.busy=true;YTV.err='';YTV.msg='Jumelage…';renderYtOv();
-    jget('data=yt&a=pair&code='+encodeURIComponent(v)).then(function(j){
-      YTV.busy=false;
-      if(j.error){YTV.msg='';YTV.err=j.error;renderYtOv();return;}
-      YTV.paired=true;YTV.tv=j.name||'Télé';YTV.msg='✓ Télé jumelée : '+YTV.tv;q.value='';YTV.err='';renderYt();renderYtOv();setTimeout(function(){YTV.msg='';renderYtOv();},1500);
-    }).catch(function(){YTV.busy=false;YTV.msg='';YTV.err='Connexion impossible';renderYtOv();});
-    return;
-  }
-  var id=ytId(v);
-  if(id){ytPlay(id);return;}
-  if(!YTV.search){YTV.err='Colle un lien YouTube (la recherche demande la clé YouTube dans le Worker).';renderYtOv();return;}
-  YTV.busy=true;YTV.err='';YTV.msg='Recherche…';YTV.results=[];renderYtOv();try{q.blur();}catch(e){}
-  jget('data=yt&a=search&q='+encodeURIComponent(v)).then(function(j){
-    YTV.busy=false;YTV.msg='';
-    if(j.error){YTV.err=j.error;} else {YTV.results=j.results||[]; if(!YTV.results.length) YTV.err='Aucun résultat.';}
-    renderYtOv();
-  }).catch(function(){YTV.busy=false;YTV.msg='';YTV.err='Connexion impossible';renderYtOv();});
-}
-function ytInit(){
-  if(MOB) return;
-  document.getElementById('c-yt').addEventListener('click',function(e){
-    var t=e.target; while(t&&t!==this&&!(t.getAttribute&&t.getAttribute('data-yt'))) t=t.parentNode;
-    if(!t||t===this) return; var a=t.getAttribute('data-yt');
-    if(a==='open') openYt(); else ytCmd(a);
-  });
-  document.getElementById('yt-back').addEventListener('click',closeYt);
-  document.getElementById('yt-go').addEventListener('click',ytSubmit);
-  document.getElementById('yt-q').addEventListener('keydown',function(e){if(e.key==='Enter'||e.keyCode===13){e.preventDefault();ytSubmit();}});
-  document.getElementById('yt-card').addEventListener('click',function(e){
-    var t=e.target; while(t&&t!==this&&!(t.getAttribute&&t.getAttribute('data-i'))) t=t.parentNode;
-    if(!t||t===this) return; var r=YTV.results[+t.getAttribute('data-i')]; if(r) ytPlay(r.id,r.title,r.channel);
-  });
-  renderYt(); ytStatus(); setTimeout(ytLoop,20000);
-}
-
 var QUOTES=[["On ne voit bien qu’avec le cœur. L’essentiel est invisible pour les yeux.", "Antoine de Saint-Exupéry"], ["Ce qui embellit le désert, c’est qu’il cache un puits quelque part.", "Antoine de Saint-Exupéry"], ["Pour ce qui est de l’avenir, il ne s’agit pas de le prévoir, mais de le rendre possible.", "Antoine de Saint-Exupéry"], ["Aimer, ce n’est pas se regarder l’un l’autre, c’est regarder ensemble dans la même direction.", "Antoine de Saint-Exupéry"], ["C’est le temps que tu as perdu pour ta rose qui fait ta rose si importante.", "Antoine de Saint-Exupéry"], ["Tu deviens responsable pour toujours de ce que tu as apprivoisé.", "Antoine de Saint-Exupéry"], ["Vivre, c’est naître lentement.", "Antoine de Saint-Exupéry"], ["Il faut imaginer Sisyphe heureux.", "Albert Camus"], ["Au milieu de l’hiver, j’apprenais enfin qu’il y avait en moi un été invincible.", "Albert Camus"], ["Rien ne sert de courir ; il faut partir à point.", "Jean de La Fontaine"], ["Patience et longueur de temps font plus que force ni que rage.", "Jean de La Fontaine"], ["On a souvent besoin d’un plus petit que soi.", "Jean de La Fontaine"], ["Aide-toi, le ciel t’aidera.", "Jean de La Fontaine"], ["Science sans conscience n’est que ruine de l’âme.", "François Rabelais"], ["Appétit vient en mangeant.", "François Rabelais"], ["Je pense, donc je suis.", "René Descartes"], ["Le cœur a ses raisons que la raison ne connaît point.", "Blaise Pascal"], ["Toute notre dignité consiste donc en la pensée.", "Blaise Pascal"], ["Ce n’est pas parce que les choses sont difficiles que nous n’osons pas, c’est parce que nous n’osons pas qu’elles sont difficiles.", "Sénèque"], ["Ce n’est pas que nous ayons peu de temps, mais nous en perdons beaucoup.", "Sénèque"], ["Nous souffrons plus souvent en imagination qu’en réalité.", "Sénèque"], ["Un voyage de mille lieues commence toujours par un premier pas.", "Lao Tseu"], ["L’imagination est plus importante que le savoir.", "Albert Einstein"], ["La vie, c’est comme une bicyclette, il faut avancer pour ne pas perdre l’équilibre.", "Albert Einstein"], ["Le rire est le propre de l’homme.", "François Rabelais"], ["Ouvrir une école, c’est fermer une prison.", "Victor Hugo"], ["Rien n’est permanent, sauf le changement.", "Héraclite"], ["On ne se baigne jamais deux fois dans le même fleuve.", "Héraclite"], ["Connais-toi toi-même.", "Inscription du temple de Delphes"], ["Cueille le jour présent.", "Horace"], ["Un esprit sain dans un corps sain.", "Juvénal"], ["Le bonheur, c’est de continuer à désirer ce que l’on possède.", "Saint Augustin"], ["Le temps est un grand maître, dit-on. Le malheur est qu’il tue ses élèves.", "Hector Berlioz"], ["Ce qu’on conçoit bien s’énonce clairement, et les mots pour le dire arrivent aisément.", "Nicolas Boileau"], ["Vingt fois sur le métier remettez votre ouvrage.", "Nicolas Boileau"], ["Qui veut voyager loin ménage sa monture.", "Jean Racine"], ["Il faut manger pour vivre et non pas vivre pour manger.", "Molière"], ["La seule chose que nous ayons à craindre, c’est la crainte elle-même.", "Franklin D. Roosevelt"], ["Pour vivre heureux, vivons cachés.", "Jean-Pierre Claris de Florian"], ["Il faut cultiver notre jardin.", "Voltaire"], ["Le travail éloigne de nous trois grands maux : l’ennui, le vice et le besoin.", "Voltaire"], ["Rien de grand ne s’est accompli dans le monde sans passion.", "Hegel"], ["Ce qui ne me tue pas me rend plus fort.", "Friedrich Nietzsche"], ["Il faut avoir du chaos en soi pour accoucher d’une étoile dansante.", "Friedrich Nietzsche"], ["L’espoir est un risque à courir.", "Georges Bernanos"], ["Il y a plus de choses au ciel et sur la terre que n’en rêve votre philosophie.", "William Shakespeare"], ["Le courage n’est pas l’absence de peur, mais la capacité de la vaincre.", "Nelson Mandela"], ["L’éducation est l’arme la plus puissante pour changer le monde.", "Nelson Mandela"], ["Un enfant, un enseignant, un livre et un stylo peuvent changer le monde.", "Malala Yousafzai"], ["Enseigner, c’est apprendre deux fois.", "Joseph Joubert"], ["L’esprit n’est pas un vase qu’on remplit, mais un feu qu’on allume.", "Plutarque"], ["Le véritable voyage de découverte ne consiste pas à chercher de nouveaux paysages, mais à avoir de nouveaux yeux.", "Marcel Proust"], ["Notre vie est ce que nos pensées en font.", "Marc Aurèle"], ["Ce n’est pas ce qui nous arrive qui nous trouble, mais le jugement que nous portons sur ce qui nous arrive.", "Épictète"], ["Dans la vie, rien n’est à craindre, tout est à comprendre.", "Marie Curie"], ["Le hasard ne favorise que les esprits préparés.", "Louis Pasteur"], ["La paresse, c’est l’habitude de se reposer avant d’être fatigué.", "Jules Renard"], ["Le pessimisme est d’humeur, l’optimisme est de volonté.", "Alain"], ["Pour exécuter de grandes choses, il faut vivre comme si on ne devait jamais mourir.", "Vauvenargues"], ["Les grandes pensées viennent du cœur.", "Vauvenargues"], ["Je ne peins pas l’être, je peins le passage.", "Michel de Montaigne"], ["La plus grande chose du monde, c’est de savoir être à soi.", "Michel de Montaigne"], ["La vie est trop courte pour être petite.", "Benjamin Disraeli"], ["La critique est aisée, mais l’art est difficile.", "Philippe Néricault Destouches"], ["C’est en forgeant qu’on devient forgeron.", "Proverbe"], ["Les petits ruisseaux font les grandes rivières.", "Proverbe"], ["Après la pluie, le beau temps.", "Proverbe"], ["Tout vient à point à qui sait attendre.", "Proverbe"], ["Mieux vaut prévenir que guérir.", "Proverbe"], ["Quand on veut, on peut.", "Proverbe"], ["Les voyages forment la jeunesse.", "Proverbe"], ["Petit à petit, l’oiseau fait son nid.", "Proverbe"], ["Rira bien qui rira le dernier.", "Proverbe"], ["Mieux vaut tard que jamais.", "Proverbe"], ["À cœur vaillant rien d’impossible.", "Proverbe"], ["La nuit porte conseil.", "Proverbe"], ["L’union fait la force.", "Proverbe"], ["Il faut battre le fer quand il est chaud.", "Proverbe"], ["Qui sème le vent récolte la tempête.", "Proverbe"], ["Chacun voit midi à sa porte.", "Proverbe"], ["Mieux vaut un tiens que deux tu l’auras.", "Proverbe"]];
 
 function quoteIdx(d){
@@ -2086,7 +1738,7 @@ function renderQuote(){
 
 /* ---- navigation entre les pages (glisser horizontalement) ---- */
 function pagesInit(){
-  var pgs=document.getElementById('pages'), els=[document.getElementById('app'),document.getElementById('p2'),document.getElementById('p3')],
+  var pgs=document.getElementById('pages'), els=[document.getElementById('app'),document.getElementById('p2')],
       dots=document.querySelectorAll('#pg .pgd'), cur=0, N=dots.length;
   window.curPage=0;
   function setX(px,anim){
@@ -2279,7 +1931,7 @@ function render(){
   var night=f>t?(h>=f||h<t):(h>=f&&h<t);
   document.body.className=night?'night':'';
 }
-edtInit();wkInit();wxInit();pagesInit();mnInit();shopInit();tmInit();iaInit();spInit();ytInit();render();
+edtInit();wkInit();wxInit();pagesInit();mnInit();shopInit();tmInit();iaInit();render();
 fxSetup(0);fxSetup(1);fxSetup(2);requestAnimationFrame(fxLoop);
 loadConf();
 loadEdf();
