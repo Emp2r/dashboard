@@ -1797,7 +1797,7 @@ function renderNt(){
     (h?'<div class="ntg">'+h+'</div>':'<div class="empty" style="color:var(--t3);padding-top:1.2rem">Aucune note pour l’instant.</div>'));
 }
 function ntStatus(){
-  var q=document.getElementById('nt-q'), l=q.value.length, st=NT.sync==='ok'?'● synchronisé':NT.sync==='err'?'○ hors ligne':'';
+  var q=document.getElementById('nt-q'), l=q.value.length, st=NT.sync==='ok'?'● synchronisé · srv '+NT.srv+' · tél '+NT.list.length:NT.sync==='err'?'○ hors ligne ('+NT.http+')':NT.sync==='local'?'○ non relié au Worker':'';
   document.getElementById('nt-cnt').textContent=NT.flash||((l?l+' / 220':'')+(l&&st?' · ':'')+st);
 }
 function ntSize(){
