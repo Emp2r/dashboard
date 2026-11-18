@@ -1749,18 +1749,20 @@ function ntSync(){
   x.timeout=15000;
   function end(st){NT.busy=false;NT.sync=st;if(NT.again){NT.again=false;ntDirty();}render();renderNt();ntStatus();}
   x.onload=function(){
+    NT.http=x.status;
     if(x.status===503){end('local');return;}
     if(x.status!==200){end('err');return;}
     try{
-      var j=JSON.parse(x.responseText), m=ntMerge({list:NT.list,tomb:NT.tomb},j), more=ntSig(m)!==ntSig(j);
-      NT.list=m.list;NT.tomb=m.tomb;ntSaveLocal();
+      var j=JSON.parse(x.responseText), had={},m;NT.list.forEach(function(n){had[n.i]=1;}); m=ntMerge({list:NT.list,tomb:NT.tomb},j), more=ntSig(m)!==ntSig(j);
+      var nw=m.list.filter(function(n){return !had[n.i];}).sort(function(p,q){return q.t-p.t;});if(nw.length&&!push)NT.top=nw[0].i;
+      NT.list=m.list;NT.tomb=m.tomb;ntSaveLocal();NT.okAt=Date.now();NT.srv=(j.list||[]).length;
       if(push) NT.pending=false;
       if(!push&&more){NT.pending=true;clearTimeout(NT.timer);NT.timer=setTimeout(ntSync,500);}
       end('ok');
     }catch(e){end('err');}
   };
-  x.onerror=x.ontimeout=function(){end('err');};
-  x.send(push?JSON.stringify({list:NT.list,tomb:NT.tomb}):null);
+  x.onerror=x.ontimeout=function(){NT.http=0;end('err');};
+  try{x.send(push?JSON.stringify({list:NT.list,tomb:NT.tomb}):null);}catch(e){NT.http=-1;end('err');}
 }
 function ntDate(t){var d=new Date(t);return JOURS[d.getDay()].slice(0,3)+'. '+d.getDate()+' '+MOIS[d.getMonth()];}
 function ntFit(){
@@ -1775,10 +1777,10 @@ function ntFit(){
   if(s.scrollWidth>box.clientWidth+1) s.style.overflowWrap='anywhere';
 }
 function renderNoteCard(){
-  var L=NT.list, n=L.length?L[L.length-1]:null;
+  var L=NT.list, n=L.length?L[L.length-1]:null,i; if(NT.top){for(i=0;i<L.length;i++)if(L[i].i===NT.top)n=L[i];}
   var h='<div class="nth"><span>'+esc(ntDate(n?n.t:Date.now()))+(n?' · '+hm(n.t):'')+'</span><button type="button" class="ntplus" data-nt="add">+</button></div>'+
     '<div class="ntb"><div class="nts'+(n?'':' nte')+'">'+(n?esc(n.x):'Touche + pour écrire un petit mot…')+'</div></div>'+
-    '<div class="ntc">'+(L.length>1?L.length+' notes · ':'')+(NT.sync==='ok'?'●':NT.sync==='err'?'○':'')+'</div>';
+    '<div class="ntc">'+(L.length>1?L.length+' notes · ':'')+(NT.sync==='ok'?'● '+hm(NT.okAt)+' · srv '+NT.srv:NT.sync==='err'?'○ erreur '+NT.http:NT.sync==='local'?'○ local':'')+'</div>';
   var pc='pc'+(n&&n.c>=0?n.c:(n?ntCol(n.i):0)); h='<!--'+pc+'-->'+h;
   var el=document.getElementById('c-note'); if(el) el.className='card '+pc;
   var ch=(cache['c-note']!==h); put('c-note',h); if(ch) ntFit();
@@ -1825,7 +1827,7 @@ function ntInit(){
   document.getElementById('nt-save').addEventListener('click',function(){
     var v=q.value.replace(/^\s+|\s+$/g,'');
     if(!v){try{q.focus();}catch(e){}return;}
-    NT.list.push({i:Date.now().toString(36)+Math.random().toString(36).slice(2,5),t:Date.now(),x:v.slice(0,220),c:NT.nc});
+    NT.top='';NT.list.push({i:Date.now().toString(36)+Math.random().toString(36).slice(2,5),t:Date.now(),x:v.slice(0,220),c:NT.nc});
     NT.nc=ntRand(NT.nc); ntApplyNc();
     if(NT.list.length>200) NT.list=NT.list.slice(-200);
     q.value=''; try{localStorage.removeItem('dbnd');}catch(e){}
