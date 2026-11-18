@@ -668,6 +668,24 @@ html.mob.mu .msl{flex:none}
 html.mob.mu .mo{flex:none}
 html.mob.mu .mo b,html.mob.mu .mo.sel b{font-size:1rem;-webkit-line-clamp:3}html.mob.mu .mo span{-webkit-line-clamp:2}html.mob.mu .mo span{font-size:.82rem}
 html.mob.mu .msl.none{display:none}
+
+/* ---- Idées de repas (liste libre) ---- */
+.mgrid{grid-template-columns:repeat(6,1fr);grid-auto-rows:1fr;gap:.6rem}
+.mo{position:relative;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:.25rem;padding:.7rem .8rem;border-radius:1.2rem;min-height:0;flex:none}
+.mo b{font-size:1rem;-webkit-line-clamp:3}
+.mo span{font-size:.78rem;-webkit-line-clamp:2}
+.mo.st1{background:linear-gradient(160deg,rgba(48,209,88,.34),rgba(10,132,255,.30));border-color:rgba(48,209,88,.55)}
+.mo.st1 span{display:none}.mo.st2{opacity:.4}.mo.st2 b{text-decoration:line-through}
+.mo em{position:absolute;right:.7rem;top:.55rem;font-style:normal;font-size:.72rem;font-weight:700;color:#7ee7a0}
+.mk{text-decoration:none;align-self:flex-start;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.12rem .5rem;border-radius:1rem;background:rgba(255,255,255,.1);color:var(--t2)}
+.mk.rapide{background:rgba(48,209,88,.22);color:#8af0aa}.mk.mijoté{background:rgba(255,159,10,.22);color:#ffc266}
+.mact{display:flex;gap:.4rem;margin-top:.25rem}
+.mact button{min-height:2.2rem;padding:0 .8rem;border-radius:1rem;background:rgba(255,255,255,.16);font-size:.8rem;font-weight:600;color:var(--t1)}
+.mact button:active{background:rgba(255,255,255,.32)}
+html.mob.mu .mgrid{grid-template-columns:1fr;grid-auto-rows:auto}
+html.mob.mu .mo{padding:.85rem 1rem}
+html.mob.mu .mo b{font-size:1.05rem}html.mob.mu .mo span{font-size:.88rem}
+html.mob.mu .mact button{min-height:2.6rem;font-size:.9rem}
 </style>
 </head>
 <body>
@@ -2017,7 +2035,7 @@ function ntInit(){
    MENUS DE LA SEMAINE (ticket de caisse -> propositions -> choix -> recette)
    ===================================================================== */
 var MU={d:null,busy:false,post:0,last:0,msg:'',err:false,file:null,mob:MOBM};
-function muLoad(){try{var j=JSON.parse(localStorage.getItem('dbm')||'null');if(j&&j.slots)MU.d=j;}catch(e){}}
+function muLoad(){try{var j=JSON.parse(localStorage.getItem('dbm')||'null');if(j&&j.ideas)MU.d=j;}catch(e){}}
 function muSave(){try{localStorage.setItem('dbm',JSON.stringify(MU.d));}catch(e){}}
 function muKey(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
 function muDate(k){var p=String(k).split('-');return new Date(+p[0],+p[1]-1,+p[2],12);}
@@ -2035,42 +2053,30 @@ function muSync(){
   if(!CONFIG.proxy||MU.busy||MU.post>0) return;
   MU.last=Date.now();
   muXhr('GET',null,function(st,j){
-    if(st===200&&j&&!MU.busy&&MU.post===0){ if(j.slots){MU.d=j;muSave();} renderMenus(); }
+    if(st===200&&j&&!MU.busy&&MU.post===0){ if(j.ideas){MU.d=j;muSave();} renderMenus(); }
   });
 }
 function muSend(obj,done){
   MU.post++;
   muXhr('POST',obj,function(st,j){
     MU.post--;
-    if(st===200&&j&&j.slots){MU.d=j;muSave();}
+    if(st===200&&j&&j.ideas){MU.d=j;muSave();}
     renderMenus(); if(done) done(st,j);
   },obj.ticket||obj.regen?150000:20000);
 }
-function menuTile(k,i,o,mob){
-  return '<button type="button" class="mo" data-mu="pick" data-k="'+k+'" data-i="'+i+'"><b>'+esc(o.t)+'</b><span>'+esc(o.d)+'</span></button>';
-}
-function menuSlot(label,k,mob){
-  var d=MU.d, opts=d.slots[k];
-  if(!opts) return '<div class="msl none"></div>';
-  var pk=d.pick&&d.pick[k];
-  if(pk!==undefined&&opts[pk]){
-    var o=opts[pk];
-    return '<div class="msl on"><div class="msh">'+label+'<button type="button" class="mchg" data-mu="clr" data-k="'+k+'">changer</button></div>'+
-      '<button type="button" class="mo sel" '+(mob?'':'data-mu="rec" data-k="'+k+'" data-i="'+pk+'"')+'><b>'+esc(o.t)+'</b><span>'+esc(o.d)+'</span>'+(mob?'':'<em>Recette ›</em>')+'</button></div>';
-  }
-  return '<div class="msl"><div class="msh">'+label+'</div>'+opts.map(function(o,i){return menuTile(k,i,o,mob);}).join('')+'</div>';
-}
 function menuHtml(mob){
-  var d=MU.d, hd='<div class="label"><span>Menus de la semaine</span><span class="r">';
-  if(!d||!d.from) return hd+'</span></div><div class="mempty">Envoie le ticket de caisse Lidl depuis ton téléphone<small>Ouvre la page « Menus » du téléphone, choisis le PDF du ticket : les propositions de la semaine apparaissent ici.</small></div>';
-  var t=muDate(d.from), today=muKey(new Date()), cols='', i, n=(d.items||[]).length;
-  hd+=(MU.busy?'<span class="pill">génération…</span> ':'')+(d.ticket?'Ticket du '+d.ticket.slice(8)+'/'+d.ticket.slice(5,7)+(n?' · '+n+' articles':''):'')+'</span></div>';
-  for(i=0;i<7;i++){
-    var dd=new Date(t.getTime()+i*86400000), ks=muKey(dd), wd=dd.getDay();
-    cols+='<div class="mcol'+(ks<today?' past':'')+(ks===today?' today':'')+'"><div class="mday">'+MU_J[wd]+'<b>'+dd.getDate()+'</b></div>'+
-      menuSlot('Midi',ks+'|m',mob)+menuSlot('Soir',ks+'|s',mob)+'</div>';
+  var d=MU.d, hd='<div class="label"><span>Idées de repas</span><span class="r">';
+  if(!d||!d.ideas) return hd+'</span></div><div class="mempty">Envoie le ticket de caisse Lidl depuis ton téléphone<small>Ouvre la page « Menus » du téléphone, choisis le PDF du ticket : les idées de repas apparaissent ici.</small></div>';
+  var n=(d.items||[]).length, pk=d.pick||{}, nr=0, i, h='', k;
+  for(k in pk) if(pk[k]===1) nr++;
+  hd+=(MU.busy?'<span class="pill">génération…</span> ':'')+(nr?nr+' retenue'+(nr>1?'s':'')+' · ':'')+(d.ticket?'Ticket du '+d.ticket.slice(8)+'/'+d.ticket.slice(5,7)+(n?' · '+n+' articles':''):'')+'</span></div>';
+  for(i=0;i<d.ideas.length;i++){
+    var o=d.ideas[i], st=pk[i]||0;
+    h+='<div class="mo st'+st+'" data-mu="tog" data-i="'+i+'"><u class="mk '+esc(o.k||'')+'">'+esc(o.k||'')+'</u><b>'+esc(o.t)+'</b><span>'+esc(o.d)+'</span>'+
+      (st===1?'<div class="mact">'+(mob?'':'<button type="button" data-mu="rec" data-i="'+i+'">Recette ›</button>')+'<button type="button" data-mu="done" data-i="'+i+'">Fait ✓</button></div>':'')+
+      (st===2?'<em>Fait</em>':'')+'</div>';
   }
-  return hd+'<div class="mgrid">'+cols+'</div>'+(mob?'':'<button type="button" class="mre" data-mu="regen">Autres idées</button>');
+  return hd+'<div class="mgrid">'+h+'</div>'+(mob?'':'<button type="button" class="mre" data-mu="regen">Autres idées</button>');
 }
 function renderMenus(){
   if(MOBM){
@@ -2079,21 +2085,26 @@ function renderMenus(){
     var g=document.getElementById('mu-go'); if(g) g.disabled=MU.busy;
   }else put('c-menu',menuHtml(false));
 }
-function muRecipe(k,i){
-  var d=MU.d, o=d&&d.slots[k]&&d.slots[k][i]; if(!o) return;
+function muRecipe(i){
+  var d=MU.d, o=d&&d.ideas&&d.ideas[i]; if(!o) return;
   var q='Recette détaillée pour 6 personnes : '+o.t+' ('+o.d+'). Produits que j’ai achetés : '+(d.items||[]).slice(0,45).join(', ')+'. J’ai déjà les épices, assaisonnements et bases de cuisine.';
   openIa(q.slice(0,1400));
+}
+function muSet(i,st){
+  if(!MU.d) return; MU.d.pick=MU.d.pick||{};
+  if(st) MU.d.pick[i]=st; else delete MU.d.pick[i];
+  muSave(); renderMenus(); muSend({pick:{i:i,s:st}});
 }
 function muClick(e){
   var t=e.target; while(t&&!(t.getAttribute&&t.getAttribute('data-mu'))) t=t.parentNode;
   if(!t||!t.getAttribute) return;
-  var a=t.getAttribute('data-mu'), k=t.getAttribute('data-k'), i=+t.getAttribute('data-i');
-  if(a==='pick'&&MU.d){MU.d.pick=MU.d.pick||{};MU.d.pick[k]=i;muSave();renderMenus();muSend({pick:{k:k,i:i}});}
-  else if(a==='clr'&&MU.d){delete MU.d.pick[k];muSave();renderMenus();muSend({pick:{k:k,i:null}});}
-  else if(a==='rec'){muRecipe(k,i);}
+  var a=t.getAttribute('data-mu'), i=+t.getAttribute('data-i');
+  if(a==='tog'&&MU.d){var cur=(MU.d.pick||{})[i]||0; muSet(i,cur===0?1:0);}
+  else if(a==='done'){e.stopPropagation();muSet(i,2);}
+  else if(a==='rec'){e.stopPropagation();muRecipe(i);}
   else if(a==='regen'){
     if(MU.busy) return; MU.busy=true; renderMenus();
-    muSend({regen:1,from:muKey(new Date())},function(st,j){MU.busy=false;renderMenus();});
+    muSend({regen:1},function(st,j){MU.busy=false;renderMenus();});
   }
 }
 function muPrep(f,cb){
@@ -2129,9 +2140,9 @@ function muInit(){
       muPrep(MU.file,function(tk,er){
         if(!tk){MU.busy=false;MU.err=true;MU.msg=er;renderMenus();return;}
         MU.msg='Génération des menus (≈30 s)…';renderMenus();
-        muSend({ticket:tk,from:muKey(new Date()),note:document.getElementById('mu-note').value},function(st,j){
+        muSend({ticket:tk,note:document.getElementById('mu-note').value},function(st,j){
           MU.busy=false;
-          if(st===200&&j&&j.slots){MU.err=false;MU.msg='✓ Menus envoyés sur la tablette';MU.file=null;document.getElementById('mu-fn').textContent='Aucun fichier choisi';document.getElementById('mu-f').value='';}
+          if(st===200&&j&&j.ideas){MU.err=false;MU.msg='✓ Menus envoyés sur la tablette';MU.file=null;document.getElementById('mu-fn').textContent='Aucun fichier choisi';document.getElementById('mu-f').value='';}
           else{MU.err=true;MU.msg=(j&&j.error)||(st===0?'Connexion impossible ou trop long':'Erreur '+st);}
           renderMenus();
         });
