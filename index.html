@@ -547,6 +547,83 @@ html.mob.nt #nt-q{font-size:2.2rem}
   background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);-webkit-backdrop-filter:blur(25px);backdrop-filter:blur(25px);
   box-shadow:0 1rem 2.5rem rgba(0,0,0,.5),inset 0 1px 1px rgba(255,255,255,.18);transition:background .2s,transform .2s}
 #wk-back:active,#wx-back:active,#ed-back:active,#mn-back:active,#sh-back:active,#tm-back:active,#ia-back:active,#nt-back:active{transform:scale(.95);background:rgba(255,255,255,.25)}
+
+/* =====================================================================
+   REFONTE « MODE MURAL » : lisibilité, tactile, ambiances, ressorts
+   (animations limitées à transform / opacity)
+   ===================================================================== */
+:root{--t2:rgba(235,235,245,.72);--t3:rgba(235,235,245,.52);--spring:cubic-bezier(.22,1,.36,1);--bounce:cubic-bezier(.175,.885,.32,1.15)}
+
+/* 1. Confort tactile (zones d'au moins 2,6 rem) */
+.chip,.sback,.iac button,.iasug button,#ia-new,#ia-go,.ntm button,.hr2 button,.tmr button,
+button[data-act=undo],button[data-act=prev],button[data-act=next],button[data-act=clear-done],button[data-act=addnew],button[data-act=clear-all]{
+  min-height:2.6rem;display:inline-flex;align-items:center;justify-content:center}
+.lnk{display:flex;align-items:center;justify-content:flex-end;min-height:2.6rem}
+.ntplus{width:2.6rem;height:2.6rem;line-height:2.5rem}
+.pd{position:relative}
+.pd:after{content:"";position:absolute;left:-.45rem;right:-.45rem;top:-.9rem;bottom:-.9rem}
+/* 1. Listes qui respirent */
+.ev{padding:.62rem 0}
+.ev+.ev{border-top:1px solid rgba(255,255,255,.06)}
+.sl{padding:.52rem .5rem}
+.rrow+.rrow{border-top:1px solid rgba(255,255,255,.05)}
+.rrow{padding:.5rem 0}
+
+/* 2. Pastilles de pagination fluides */
+.pd{transition:width .35s var(--spring),background-color .3s,transform .3s var(--bounce);will-change:transform}
+.pd.on{width:1.9rem;border-radius:1rem}
+
+/* 3. Retour tactile sur les cartes et les boutons (ressort) */
+.card{transition:transform .35s var(--spring),border-color .3s}
+.card:active{transform:scale(.985);border-color:rgba(255,255,255,.28)}
+#wk-in .card:active,#wx-in .card:active,#ed-in .card:active,#mn-in .card:active,#sh-in .card:active,#tm-in .card:active,#ia-in .card:active,#nt-in .card:active{transform:none;border-color:rgba(255,255,255,.11)}
+.chip,.sback,.iac button,.iasug button,.tgo,.tb,.kb,.ct,.at,#ia-go,#ia-new,.ntm button,.hr2 button{transition:transform .3s var(--bounce),background .2s}
+.chip:active,.sback:active,.iac button:active,.iasug button:active,.tgo:active,.tb:active,.kb:active,.ct:active,.at:active,#ia-go:active,#ia-new:active,.ntm button:active,.hr2 button:active{transform:scale(.95)}
+/* modales : ressort d'ouverture */
+#wk,#wx,#ed,#mn,#sh,#tm,#ia,#nt{transition:opacity .45s var(--spring),visibility 0s linear .45s}
+#wk.on,#wx.on,#ed.on,#mn.on,#sh.on,#tm.on,#ia.on,#nt.on{transition:opacity .45s var(--spring),visibility 0s}
+#wk-in,#wx-in,#ed-in,#mn-in,#sh-in,#tm-in,#ia-in,#nt-in{transform:scale(.94);transition:transform .55s var(--spring)}
+/* boutons Retour : rebond marqué */
+#wk-back,#wx-back,#ed-back,#mn-back,#sh-back,#tm-back,#ia-back,#nt-back{transition:background .2s,transform .35s var(--bounce)}
+#wk-back:active,#wx-back:active,#ed-back:active,#mn-back:active,#sh-back:active,#tm-back:active,#ia-back:active,#nt-back:active{transform:scale(.92);background:rgba(255,255,255,.28)}
+
+/* 4. Météo : ambiances lentes sous le canvas (transform seul) */
+#c-w0:before,#c-w1:before{content:"";position:absolute;left:-25%;top:-25%;width:150%;height:150%;z-index:0;pointer-events:none;opacity:.95;
+  animation:amb-drift 42s ease-in-out infinite alternate;will-change:transform}
+@keyframes amb-drift{0%{transform:translate3d(-4%,-2%,0) scale(1)}100%{transform:translate3d(4%,3%,0) scale(1.12)}}
+.amb-clear:before{background:radial-gradient(circle at 78% 18%,rgba(255,196,80,.42),rgba(255,150,40,.14) 38%,transparent 62%),radial-gradient(circle at 12% 95%,rgba(255,120,40,.12),transparent 50%)}
+.amb-partly:before{background:radial-gradient(circle at 76% 20%,rgba(255,190,80,.30),transparent 52%),radial-gradient(circle at 20% 80%,rgba(150,170,200,.18),transparent 55%)}
+.amb-cloud:before,.amb-fog:before{background:radial-gradient(circle at 25% 25%,rgba(170,185,205,.22),transparent 55%),radial-gradient(circle at 80% 85%,rgba(120,135,160,.20),transparent 55%)}
+.amb-drizzle:before,.amb-rain:before{background:radial-gradient(circle at 30% 15%,rgba(90,140,210,.34),transparent 55%),radial-gradient(circle at 85% 90%,rgba(60,100,160,.28),transparent 55%)}
+.amb-storm:before{background:radial-gradient(circle at 30% 15%,rgba(110,90,200,.34),transparent 55%),radial-gradient(circle at 85% 90%,rgba(50,70,140,.30),transparent 55%)}
+.amb-snow:before{background:radial-gradient(circle at 30% 20%,rgba(190,230,255,.28),transparent 55%),radial-gradient(circle at 80% 85%,rgba(150,200,240,.18),transparent 55%)}
+.amb-n.amb-clear:before,.amb-n.amb-partly:before{background:radial-gradient(circle at 78% 18%,rgba(110,130,255,.30),transparent 55%),radial-gradient(circle at 15% 90%,rgba(90,60,190,.20),transparent 55%)}
+
+/* 2. Train : indicateur « temps réel » */
+.live{display:inline-block;position:relative;width:.62rem;height:.62rem;margin:0 .15rem 0 .5rem;border-radius:50%;background:var(--green);vertical-align:middle}
+.live:after{content:"";position:absolute;left:0;top:0;width:100%;height:100%;border-radius:50%;background:inherit;animation:pulse-live 1.8s ease-out infinite}
+.live.l{background:var(--orange)}.live.x{background:var(--red)}
+.live+.rt{margin-left:.3rem}
+@keyframes pulse-live{0%{transform:scale(1);opacity:.7}100%{transform:scale(3);opacity:0}}
+
+/* 2. Assistant IA : halo « Apple Intelligence » */
+#c-ia:before{content:"";position:absolute;left:-30%;top:-30%;width:160%;height:160%;z-index:0;pointer-events:none;opacity:.4;
+  background:radial-gradient(circle at 18% 88%,rgba(10,132,255,.55),transparent 42%),radial-gradient(circle at 85% 12%,rgba(191,90,242,.50),transparent 42%),radial-gradient(circle at 88% 88%,rgba(100,210,255,.40),transparent 40%);
+  transition:opacity .5s var(--spring)}
+#c-ia:after{content:"";position:absolute;left:0;top:0;right:0;bottom:0;border-radius:inherit;pointer-events:none;opacity:.25;
+  box-shadow:inset 0 0 0 1px rgba(100,210,255,.5),inset 0 0 2.4rem rgba(191,90,242,.35);transition:opacity .5s var(--spring)}
+#c-ia>*{position:relative;z-index:1}
+#c-ia:active:before,html.aigen #c-ia:before{opacity:.95;animation:ai-glow 5s ease-in-out infinite alternate}
+#c-ia:active:after,html.aigen #c-ia:after{opacity:.9}
+@media (hover:hover){#c-ia:hover:before{opacity:.8}#c-ia:hover:after{opacity:.7}}
+@keyframes ai-glow{0%{transform:translate3d(-5%,3%,0) rotate(-6deg) scale(1)}100%{transform:translate3d(5%,-3%,0) rotate(6deg) scale(1.1)}}
+#ia-bar{position:relative}
+#ia-bar:before{content:"";position:absolute;left:-1rem;right:-1rem;top:-.8rem;bottom:-.8rem;z-index:0;pointer-events:none;opacity:0;border-radius:3rem;
+  background:linear-gradient(90deg,rgba(10,132,255,.45),rgba(191,90,242,.45),rgba(100,210,255,.45));transition:opacity .5s var(--spring)}
+html.aigen #ia-bar:before{opacity:1;animation:ai-glow 3s ease-in-out infinite alternate}
+#ia-bar>*{position:relative;z-index:1}
+html.nofx *:before,html.nofx *:after,html.nofx .pd{animation:none!important}
+@media (prefers-reduced-motion:reduce){#c-w0:before,#c-w1:before,.live:after,#c-ia:before,#ia-bar:before{animation:none!important}}
 </style>
 </head>
 <body>
@@ -634,6 +711,7 @@ var CONFIG = {
   var p=g('p'),k=g('k');
   try{if(p)localStorage.setItem('dbp',p);if(k)localStorage.setItem('dbk',k);p=p||localStorage.getItem('dbp');k=k||localStorage.getItem('dbk');}catch(e){}
   CONFIG.proxy=p||'';CONFIG.key=k||'';
+  try{if(/[?&]fx=0(&|$)/.test(location.search)) document.documentElement.classList.add('nofx');}catch(e){}
 })();
 
 /* =====================================================================
@@ -1053,6 +1131,7 @@ function renderTrain(){
       if(rt.status==='supprime'){tag='<span class="rt cancel">Supprimé</span>';}
       else if(rt.delay>0){tt=rt.real;a={t:a.t+rt.delay*60000,time:rt.real,from:a.from,to:a.to,num:a.num};tag='<span class="rt late">+'+rt.delay+' min</span>';}
       else tag='<span class="rt">À l’heure</span>';
+      tag='<i class="live'+(rt.status==='supprime'?' x':rt.delay>0?' l':'')+'"></i>'+tag;
       if(rt.msg) ex='<div class="tmsg">'+esc(rt.msg)+'</div>';
     }
     if(!a.num&&T.backArr) ex='<div class="tmsg" style="color:var(--t2)">Arrivée à '+esc(a.to)+' vers '+esc(T.backArr)+'</div>';
@@ -1902,6 +1981,7 @@ function renderIaCard(){
     '<div class="iac">'+IA_SUG.slice(0,2).map(function(x){return '<button type="button" data-ia="'+esc(x)+'">'+esc(x)+'</button>';}).join('')+'</div>';
 }
 function renderIa(scroll){
+  try{document.documentElement.classList.toggle('aigen',!!IA.busy);}catch(e){}
   if(!IA.open) return;
   var body='';
   IA.msgs.forEach(function(m){body+=m.r==='user'?'<div class="iau">'+esc(m.t)+'</div>':'<div class="iaa">'+iaMd(m.t)+'</div>';});
@@ -2148,6 +2228,13 @@ function fxLoop(now){
    BOUCLE D'AFFICHAGE
    ===================================================================== */
 var cache={};
+function ambSet(){
+  for(var i=0;i<2;i++){
+    var el=document.getElementById('c-w'+i), f=fxs[i]; if(!el||!f) continue;
+    var cl='card amb-'+f.kind+(f.night?' amb-n':'');
+    if(el.className!==cl) el.className=cl;
+  }
+}
 function put(id,html){if(cache[id]!==html){cache[id]=html;document.getElementById(id).innerHTML=html;}}
 function render(){
   put('c-quote',renderQuote());
@@ -2158,6 +2245,7 @@ function render(){
   document.getElementById('c-clock').className='card'+(TM.state==='done'?' alarm':'');
   put('w0',renderWeather(0));
   put('w1',renderWeather(1));
+  ambSet();
   put('c-train',renderTrain());
   put('c-agenda',renderAgenda());
   renderEdtSlides();
