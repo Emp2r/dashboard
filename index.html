@@ -33,7 +33,7 @@ body.night{filter:brightness(.38)}
   padding:1.45rem 1.6rem 1.4rem;border-radius:2.2rem;
   background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
   border:1px solid rgba(255,255,255,.11);
-  -webkit-backdrop-filter:blur(35px) saturate(1.8);backdrop-filter:blur(35px) saturate(1.8);
+  -webkit-backdrop-filter:blur(24px) saturate(1.3);backdrop-filter:blur(24px) saturate(1.3);
   box-shadow:0 2rem 4rem rgba(0,0,0,.4),inset 0 1px 1px rgba(255,255,255,.18),inset 0 -1px 1px rgba(0,0,0,.4);
   transition:transform .3s cubic-bezier(.25,1,.5,1),border-color .3s}
 /* Effet « press » tactile façon iOS */
@@ -570,7 +570,7 @@ button[data-act=undo],button[data-act=prev],button[data-act=next],button[data-ac
 .rrow{padding:.5rem 0}
 
 /* 2. Pastilles de pagination fluides */
-.pd{transition:width .35s var(--spring),background-color .3s,transform .3s var(--bounce);will-change:transform}
+.pd{transition:width .35s var(--spring),background-color .3s,transform .3s var(--bounce)}
 .pd.on{width:1.9rem;border-radius:1rem}
 
 /* 3. Retour tactile sur les cartes et les boutons (ressort) */
@@ -589,7 +589,7 @@ button[data-act=undo],button[data-act=prev],button[data-act=next],button[data-ac
 
 /* 4. Météo : ambiances lentes sous le canvas (transform seul) */
 #c-w0:before,#c-w1:before{content:"";position:absolute;left:-25%;top:-25%;width:150%;height:150%;z-index:0;pointer-events:none;opacity:.95;
-  animation:amb-drift 42s ease-in-out infinite alternate;will-change:transform}
+  }
 @keyframes amb-drift{0%{transform:translate3d(-4%,-2%,0) scale(1)}100%{transform:translate3d(4%,3%,0) scale(1.12)}}
 .amb-clear:before{background:radial-gradient(circle at 78% 18%,rgba(255,196,80,.42),rgba(255,150,40,.14) 38%,transparent 62%),radial-gradient(circle at 12% 95%,rgba(255,120,40,.12),transparent 50%)}
 .amb-partly:before{background:radial-gradient(circle at 76% 20%,rgba(255,190,80,.30),transparent 52%),radial-gradient(circle at 20% 80%,rgba(150,170,200,.18),transparent 55%)}
@@ -686,6 +686,9 @@ html.mob.mu .mgrid{grid-template-columns:1fr;grid-auto-rows:auto}
 html.mob.mu .mo{padding:.85rem 1rem}
 html.mob.mu .mo b{font-size:1.05rem}html.mob.mu .mo span{font-size:.88rem}
 html.mob.mu .mact button{min-height:2.6rem;font-size:.9rem}
+
+/* allègement GPU : la grande carte des menus et la page 3 sans flou d'arrière-plan */
+#c-menu{-webkit-backdrop-filter:none;backdrop-filter:none;background:linear-gradient(135deg,rgba(32,34,46,.92),rgba(22,22,30,.92))}
 </style>
 </head>
 <body>
@@ -1439,7 +1442,7 @@ function mnKids(){
   a.forEach(function(p){r.push({name:p.name,color:p.color||'#8e8e93'});});
   return r.length?r:PEOPLE.map(function(p){return {name:p.name,color:p.color};});
 }
-function mnLoadLocal(){try{mn.log=JSON.parse(localStorage.getItem('dbm')||'[]')||[];}catch(e){mn.log=[];}}
+function mnLoadLocal(){try{mn.log=JSON.parse(localStorage.getItem('dbm')||'[]')||[];}catch(e){mn.log=[];} if(!Array.isArray(mn.log)) mn.log=[];}
 function mnSaveLocal(){try{localStorage.setItem('dbm',JSON.stringify(mn.log));}catch(e){}}
 function mnMerge(a,b){
   var m={},out=[];
@@ -2035,8 +2038,8 @@ function ntInit(){
    MENUS DE LA SEMAINE (ticket de caisse -> propositions -> choix -> recette)
    ===================================================================== */
 var MU={d:null,busy:false,post:0,last:0,msg:'',err:false,file:null,mob:MOBM};
-function muLoad(){try{var j=JSON.parse(localStorage.getItem('dbm')||'null');if(j&&j.ideas)MU.d=j;}catch(e){}}
-function muSave(){try{localStorage.setItem('dbm',JSON.stringify(MU.d));}catch(e){}}
+function muLoad(){try{var j=JSON.parse(localStorage.getItem('dbmu')||'null');if(j&&j.ideas)MU.d=j;}catch(e){}}
+function muSave(){try{localStorage.setItem('dbmu',JSON.stringify(MU.d));}catch(e){}}
 function muKey(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
 function muDate(k){var p=String(k).split('-');return new Date(+p[0],+p[1]-1,+p[2],12);}
 var MU_J=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
@@ -2447,8 +2450,8 @@ function render(){
   document.getElementById('c-clock').className='card'+(TM.state==='done'?' alarm':'');
   put('w0',renderWeather(0));
   put('w1',renderWeather(1));
-  ambSet();
-  renderMenus();
+  try{ambSet();}catch(e){}
+  try{renderMenus();}catch(e){}
   put('c-train',renderTrain());
   put('c-agenda',renderAgenda());
   renderEdtSlides();
@@ -2461,7 +2464,7 @@ function render(){
   var night=f>t?(h>=f||h<t):(h>=f&&h<t);
   document.body.className=night?'night':'';
 }
-edtInit();wkInit();wxInit();pagesInit();mnInit();shopInit();tmInit();iaInit();ntInit();muInit();render();
+edtInit();wkInit();wxInit();pagesInit();mnInit();shopInit();tmInit();iaInit();ntInit();try{muInit();}catch(e){}render();
 fxSetup(0);fxSetup(1);fxSetup(2);requestAnimationFrame(fxLoop);
 loadConf();
 loadEdf();
