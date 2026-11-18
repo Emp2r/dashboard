@@ -515,8 +515,6 @@ html.mob.tl #sh-tabs [data-tab=tl],html.mob.ta #sh-tabs [data-tab=ta]{background
 .ntm button{padding:.4rem .9rem;border-radius:2rem;background:rgba(59,47,0,.14);color:#3b2f00;font-size:.85rem;font-weight:600}
 .ntg{flex:1;min-height:0;overflow-y:auto;margin-top:.8rem;display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;align-content:start;-webkit-overflow-scrolling:touch;padding:.2rem .2rem 1rem}
 .nti{position:relative;min-height:8rem;padding:.7rem .9rem .8rem;border-radius:.3rem .3rem 1.2rem .3rem;background:linear-gradient(168deg,#fff3a0,#ffe45c 55%,#ffd22e);color:#3b2f00;box-shadow:0 .5rem 1rem rgba(0,0,0,.35);display:flex;flex-direction:column}
-.nti:nth-child(3n+2){background:linear-gradient(168deg,#ffd6e5,#ffb8d2 55%,#ff9fc2)}
-.nti:nth-child(3n+3){background:linear-gradient(168deg,#d4f5e2,#a8ebc6 55%,#7fdcaa)}
 .ntd{font-family:"Inter",sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:rgba(59,47,0,.55);padding-right:2rem}
 .ntx{font-family:"Caveat","Segoe Print","Bradley Hand","Comic Sans MS",cursive;font-weight:700;line-height:1.05;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:.3rem}
 .ntdel{position:absolute;right:.4rem;top:.35rem;width:1.8rem;height:1.8rem;border-radius:50%;background:rgba(59,47,0,.14);color:#3b2f00;font-size:1.1rem;line-height:1.7rem;text-align:center;padding:0;font-family:"Inter",sans-serif}
@@ -1697,6 +1695,33 @@ function tmInit(){
 
 /* ---- Post-it : petits mots pour la famille (tablette + téléphones, synchronisés par le Worker) ---- */
 var NT={open:false,list:[],tomb:{},confirm:'',ct:0,sync:'',busy:false,again:false,pending:false,timer:0,last:0,flash:'',mob:MOBN};
+
+/* ---- Couleurs des post-it : 15 dégradés + 6 versions à paillettes ---- */
+var NTP=[
+ ['#fff3a0','#ffe45c','#ffd22e'],['#ffd6e5','#ffb8d2','#ff9fc2'],['#d4f5e2','#a8ebc6','#7fdcaa'],
+ ['#d6ecff','#a9d6ff','#7cbdf7'],['#e6dcff','#cdbaff','#b199f5'],['#ffe0c2','#ffc48f','#ffa75e'],
+ ['#fff0f0','#ffc9c9','#ff9e9e'],['#e3ffd0','#c4f59a','#a1e868'],['#cffaf3','#9ae9de','#63d6c8'],
+ ['#ffd9f3','#ffb0e6','#f783d0'],['#fff7c2','#e9f27a','#cfe03f'],['#ffe9d6','#ffcdb0','#f7a98a'],
+ ['#e0e7ff','#b9c6ff','#93a5fb'],['#ffd1d1','#ff9f9f','#f77272'],['#f3e1ff','#e0b3ff','#c986f5'],
+ ['#ffd6f0','#ffa8dc','#ff7cc6'],['#e2d4ff','#c3a8ff','#9f7bf5'],['#cfeeff','#8fd6ff','#55bdf7'],
+ ['#fff1b5','#ffd966','#ffbf2e'],['#ffe0ef','#ffc2de','#f79bc4'],['#d9fff0','#a6f2d2','#6fe0b3']
+];
+var NTG=[15,16,17,18,19,20]; /* indices des versions à paillettes */
+function ntIsG(c){return c>=15;}
+function ntCol(id){var h=0,i;id=String(id||'');for(i=0;i<id.length;i++)h=(h*31+id.charCodeAt(i))>>>0;return h%NTP.length;}
+function ntRand(prev){var c,k=0;do{c=Math.random()<0.28?NTG[Math.floor(Math.random()*NTG.length)]:Math.floor(Math.random()*15);k++;}while(c===prev&&k<8);return c;}
+function ntStyle(){
+  var css='',i,p,g;
+  for(i=0;i<NTP.length;i++){
+    p=NTP[i]; g='linear-gradient(168deg,'+p[0]+' 0%,'+p[1]+' 50%,'+p[2]+' 100%)';
+    if(i>=15) g='radial-gradient(circle,rgba(255,255,255,.95) 0,rgba(255,255,255,.95) 1px,rgba(255,255,255,0) 1.7px) 0 0/19px 23px,'+
+      'radial-gradient(circle,rgba(255,255,255,.9) 0,rgba(255,255,255,.9) 1.2px,rgba(255,255,255,0) 2px) 7px 11px/31px 27px,'+
+      'radial-gradient(circle,rgba(255,236,160,.95) 0,rgba(255,236,160,.95) 1px,rgba(255,236,160,0) 1.8px) 13px 5px/23px 37px,'+
+      'radial-gradient(circle,rgba(255,255,255,.8) 0,rgba(255,255,255,.8) .8px,rgba(255,255,255,0) 1.4px) 3px 17px/13px 17px,'+g;
+    css+='#c-note.pc'+i+',#nt-new.pc'+i+',.ntg .nti.pc'+i+'{background:'+g+'}';
+  }
+  var st=document.createElement('style');st.appendChild(document.createTextNode(css));document.head.appendChild(st);
+}
 function ntLoad(){
   try{var o=JSON.parse(localStorage.getItem('dbn')||'null');
     if(o&&o.length!==undefined){NT.list=o;}else if(o){NT.list=o.list||[];NT.tomb=o.tomb||{};}}catch(e){}
@@ -1706,7 +1731,7 @@ function ntSaveLocal(){try{localStorage.setItem('dbn',JSON.stringify({list:NT.li
 function ntMerge(a,b){
   var tomb={},map={},k,now=Date.now(),out=[];
   [a,b].forEach(function(x){for(k in (x.tomb||{})){if(now-x.tomb[k]<30*86400000&&(!tomb[k]||x.tomb[k]>tomb[k]))tomb[k]=x.tomb[k];}});
-  [a,b].forEach(function(x){(x.list||[]).forEach(function(n){if(n&&n.i&&!tomb[n.i]&&!map[n.i])map[n.i]={i:n.i,t:n.t,x:String(n.x||'').slice(0,220)};});});
+  [a,b].forEach(function(x){(x.list||[]).forEach(function(n){if(n&&n.i&&!tomb[n.i]&&!map[n.i])map[n.i]={i:n.i,t:n.t,x:String(n.x||'').slice(0,220),c:(n.c>=0&&n.c<NTP.length)?(n.c|0):ntCol(n.i)};});});
   for(k in map) out.push(map[k]);
   out.sort(function(p,q){return p.t-q.t;});
   if(out.length>200) out=out.slice(-200);
@@ -1719,7 +1744,7 @@ function ntSync(){
   if(NT.busy){NT.again=true;return;}
   NT.busy=true;NT.last=Date.now();
   var push=!!NT.pending,x=new XMLHttpRequest();
-  x.open(push?'POST':'GET',api('data=notes'));
+  x.open(push?'POST':'GET',api('data=notes&_='+Date.now()));
   if(push) x.setRequestHeader('Content-Type','text/plain;charset=utf-8');
   x.timeout=15000;
   function end(st){NT.busy=false;NT.sync=st;if(NT.again){NT.again=false;ntDirty();}render();renderNt();ntStatus();}
@@ -1753,7 +1778,9 @@ function renderNoteCard(){
   var L=NT.list, n=L.length?L[L.length-1]:null;
   var h='<div class="nth"><span>'+esc(ntDate(n?n.t:Date.now()))+(n?' · '+hm(n.t):'')+'</span><button type="button" class="ntplus" data-nt="add">+</button></div>'+
     '<div class="ntb"><div class="nts'+(n?'':' nte')+'">'+(n?esc(n.x):'Touche + pour écrire un petit mot…')+'</div></div>'+
-    (L.length>1?'<div class="ntc">'+L.length+' notes</div>':'');
+    '<div class="ntc">'+(L.length>1?L.length+' notes · ':'')+(NT.sync==='ok'?'●':NT.sync==='err'?'○':'')+'</div>';
+  var pc='pc'+(n&&n.c>=0?n.c:(n?ntCol(n.i):0)); h='<!--'+pc+'-->'+h;
+  var el=document.getElementById('c-note'); if(el) el.className='card '+pc;
   var ch=(cache['c-note']!==h); put('c-note',h); if(ch) ntFit();
 }
 function renderNt(){
@@ -1761,7 +1788,7 @@ function renderNt(){
   var L=NT.list.slice().reverse(), h='';
   L.forEach(function(n){
     var l=n.x.length, fs=l<=18?2.6:l<=45?2.1:l<=90?1.7:l<=150?1.45:1.25, c=NT.confirm===n.i;
-    h+='<div class="nti"><div class="ntd">'+esc(ntDate(n.t))+' · '+hm(n.t)+'</div><div class="ntx" style="font-size:'+fs+'rem">'+esc(n.x)+'</div>'+
+    h+='<div class="nti pc'+(n.c>=0?n.c:ntCol(n.i))+'"><div class="ntd">'+esc(ntDate(n.t))+' · '+hm(n.t)+'</div><div class="ntx" style="font-size:'+fs+'rem">'+esc(n.x)+'</div>'+
       '<button type="button" class="ntdel'+(c?' c':'')+'" data-nt="del" data-id="'+esc(n.i)+'">'+(c?'Sûr ?':'×')+'</button></div>';
   });
   put('nt-list','<div class="label"><span>Toutes les notes</span><span class="r">'+L.length+'</span></div>'+
@@ -1776,10 +1803,11 @@ function ntSize(){
   q.style.fontSize=(l<=30?3.6:l<=70?2.8:l<=130?2.2:1.8)+'rem';
   ntStatus();
 }
+function ntApplyNc(){var e=document.getElementById('nt-new');if(e)e.className='card pc'+NT.nc;}
 function openNt(focus){
   NT.open=true; NT.confirm='';
   document.getElementById('nt-date').textContent=ntDate(Date.now())+' · nouvelle note';
-  document.getElementById('nt').className='on'; ntSize(); renderNt(); ntSync();
+  document.getElementById('nt').className='on'; NT.nc=ntRand(NT.nc); ntApplyNc(); ntSize(); renderNt(); ntSync();
   if(focus){var q=document.getElementById('nt-q');try{q.focus();}catch(e){}}
 }
 function closeNt(){if(NT.mob)return;NT.open=false;document.getElementById('nt').className='';var q=document.getElementById('nt-q');try{q.blur();}catch(e){}}
@@ -1797,7 +1825,8 @@ function ntInit(){
   document.getElementById('nt-save').addEventListener('click',function(){
     var v=q.value.replace(/^\s+|\s+$/g,'');
     if(!v){try{q.focus();}catch(e){}return;}
-    NT.list.push({i:Date.now().toString(36)+Math.random().toString(36).slice(2,5),t:Date.now(),x:v.slice(0,220)});
+    NT.list.push({i:Date.now().toString(36)+Math.random().toString(36).slice(2,5),t:Date.now(),x:v.slice(0,220),c:NT.nc});
+    NT.nc=ntRand(NT.nc); ntApplyNc();
     if(NT.list.length>200) NT.list=NT.list.slice(-200);
     q.value=''; try{localStorage.removeItem('dbnd');}catch(e){}
     ntDirty();
@@ -1814,12 +1843,13 @@ function ntInit(){
   });
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNt();});
   window.addEventListener('resize',function(){cache['c-note']='';render();});
+  ntStyle(); NT.nc=ntRand(-1);
   try{if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){cache['c-note']='';render();});}catch(e){}
-  if(NT.mob){NT.open=true;document.getElementById('nt').className='on';document.getElementById('nt-date').textContent='Nouvelle note pour la tablette';ntSize();renderNt();}
+  if(NT.mob){NT.open=true;ntApplyNc();document.getElementById('nt').className='on';document.getElementById('nt-date').textContent='Nouvelle note pour la tablette';ntSize();renderNt();}
   /* lecture seule régulière : 15 s sur téléphone ou écran des notes ouvert, 40 s sinon (la tablette murale) */
   setInterval(function(){
-    if(document.hidden) return;
-    var every=(NT.mob||NT.open)?15000:40000;
+    var every=(NT.mob||NT.open)?10000:20000;
+    if(NT.busy&&Date.now()-(NT.last||0)>20000) NT.busy=false;
     if(Date.now()-(NT.last||0)>=every-1000) ntSync();
   },5000);
   document.addEventListener('visibilitychange',function(){if(!document.hidden) ntSync();});
